@@ -1,0 +1,19 @@
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-opensearch
+  annotations:
+    meta.crossplane.io/maintainer: Tages <provider-yc@tages.ru>
+    meta.crossplane.io/source: github.com/tagesjump/provider-opensearch
+    meta.crossplane.io/license: Apache-2.0
+    meta.crossplane.io/description: |
+      The OpenSearch Crossplane provider adds support for
+      managing YC resources in Kubernetes.
+
+    meta.crossplane.io/readme: |
+      `provider-opensearch`is the Crossplane infrastructure provider for [OpenSearch](https://opensearch.org/).
+
+      ## Report a Bug
+
+      For filing bugs, suggesting improvements, or requesting new features, please
+      open an [issue](https://github.com/tagesjump/provider-opensearch/issues).
