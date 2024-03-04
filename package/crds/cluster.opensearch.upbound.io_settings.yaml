@@ -1,0 +1,898 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: settings.cluster.opensearch.upbound.io
+spec:
+  group: cluster.opensearch.upbound.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - opensearch
+    kind: Settings
+    listKind: SettingsList
+    plural: settings
+    singular: settings
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Settings is the Schema for the Settingss API. Manages a cluster's
+          (persistent) settings.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: SettingsSpec defines the desired state of Settings
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  actionAutoCreateIndex:
+                    description: |-
+                      (String) Whether to automatically create an index if it doesn’t already exist and apply any configured index template
+                      Whether to automatically create an index if it doesn’t already exist and apply any configured index template
+                    type: string
+                  actionDestructiveRequiresName:
+                    description: |-
+                      (Boolean) When set to true, you must specify the index name to delete an index and it is not possible to delete all indices with _all or use wildcards
+                      When set to true, you must specify the index name to delete an index and it is not possible to delete all indices with _all or use wildcards
+                    type: boolean
+                  clusterBlocksReadOnly:
+                    description: |-
+                      (Boolean) Make the whole cluster read only and metadata is not allowed to be modified
+                      Make the whole cluster read only and metadata is not allowed to be modified
+                    type: boolean
+                  clusterBlocksReadOnlyAllowDelete:
+                    description: |-
+                      (Boolean) Make the whole cluster read only, but allows to delete indices to free up resources
+                      Make the whole cluster read only, but allows to delete indices to free up resources
+                    type: boolean
+                  clusterIndicesCloseEnable:
+                    description: |-
+                      (Boolean) If false, you cannot close open indices
+                      If false, you cannot close open indices
+                    type: boolean
+                  clusterInfoUpdateInterval:
+                    description: |-
+                      (String) A time string controlling how often OpenSearch should check on disk usage for each node in the cluster
+                      A time string controlling how often OpenSearch should check on disk usage for each node in the cluster
+                    type: string
+                  clusterMaxShardsPerNode:
+                    description: |-
+                      frozen data nodes; shards for closed indices do not count toward this limit
+                      The total number of primary and replica shards for the cluster, this number is multiplied by the number of non-frozen data nodes; shards for closed indices do not count toward this limit
+                    type: number
+                  clusterMaxShardsPerNodeFrozen:
+                    description: |-
+                      (Number) The total number of primary and replica frozen shards, for the cluster; Ssards for closed indices do not count toward this limit, a cluster with no frozen data nodes is unlimited.
+                      The total number of primary and replica frozen shards, for the cluster; Ssards for closed indices do not count toward this limit, a cluster with no frozen data nodes is unlimited.
+                    type: number
+                  clusterNoMasterBlock:
+                    description: |-
+                      (String) Specifies which operations are rejected when there is no active master in a cluster (all, write)
+                      Specifies which operations are rejected when there is no active master in a cluster (all, write)
+                    type: string
+                  clusterPersistentTasksAllocationEnable:
+                    description: |-
+                      (String) Whether allocation for persistent tasks is active (all, none)
+                      Whether allocation for persistent tasks is active (all, none)
+                    type: string
+                  clusterPersistentTasksAllocationRecheckInterval:
+                    description: |-
+                      (String) A time string controling how often assignment checks are performed to react to whether persistent tasks can be assigned to nodes
+                      A time string controling how often assignment checks are performed to react to whether persistent tasks can be assigned to nodes
+                    type: string
+                  clusterRoutingAllocationAllowRebalance:
+                    description: |-
+                      (String) Specify when shard rebalancing is allowed (always, indices_primaries_active, indices_all_active)
+                      Specify when shard rebalancing is allowed (always, indices_primaries_active, indices_all_active)
+                    type: string
+                  clusterRoutingAllocationAwarenessAttributes:
+                    description: |-
+                      (String) Use custom node attributes to take hardware configuration into account when allocating shards
+                      Use custom node attributes to take hardware configuration into account when allocating shards
+                    type: string
+                  clusterRoutingAllocationBalanceIndex:
+                    description: |-
+                      (Number) Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
+                      Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
+                    type: number
+                  clusterRoutingAllocationBalanceShard:
+                    description: |-
+                      (Number) Weight factor for the total number of shards allocated on a node, increasing this raises the tendency to equalize the number of shards across all nodes
+                      Weight factor for the total number of shards allocated on a node, increasing this raises the tendency to equalize the number of shards across all nodes
+                    type: number
+                  clusterRoutingAllocationBalanceThreshold:
+                    description: |-
+                      (Number) Minimal optimization value of operations that should be performed, raising this will cause the cluster to be less aggressive about optimizing the shard balance
+                      Minimal optimization value of operations that should be performed, raising this will cause the cluster to be less aggressive about optimizing the shard balance
+                    type: number
+                  clusterRoutingAllocationClusterConcurrentRebalance:
+                    description: |-
+                      (Number) How many concurrent shard rebalances are allowed cluster wide
+                      How many concurrent shard rebalances are allowed cluster wide
+                    type: number
+                  clusterRoutingAllocationDiskIncludeRelocations:
+                    description: |-
+                      (Boolean) Whether the allocator will take into account shards that are currently being relocated to the target node when computing a node’s disk usage
+                      Whether the allocator will take into account shards that are currently being relocated to the target node when computing a node’s disk usage
+                    type: boolean
+                  clusterRoutingAllocationDiskThresholdEnabled:
+                    description: |-
+                      (Boolean) Whether the disk allocation decider is active
+                      Whether the disk allocation decider is active
+                    type: boolean
+                  clusterRoutingAllocationDiskWatermarkHigh:
+                    description: |-
+                      (String) Allocator will attempt to relocate shards away from a node whose disk usage is above this percentage disk used
+                      Allocator will attempt to relocate shards away from a node whose disk usage is above this percentage disk used
+                    type: string
+                  clusterRoutingAllocationDiskWatermarkLow:
+                    description: |-
+                      (String) Allocator will not allocate shards to nodes that have more than this percentage disk used
+                      Allocator will not allocate shards to nodes that have more than this percentage disk used
+                    type: string
+                  clusterRoutingAllocationEnable:
+                    description: |-
+                      (String) Enable or disable allocation for specific kinds of shards (all, primaries, new_primaries, none)
+                      Enable or disable allocation for specific kinds of shards (all, primaries, new_primaries, none)
+                    type: string
+                  clusterRoutingAllocationNodeConcurrentIncomingRecoveries:
+                    description: |-
+                      (Number) How many incoming recoveries where the target shard (likely the replica unless a shard is relocating) are allocated on the node
+                      How many incoming recoveries where the target shard (likely the replica unless a shard is relocating) are allocated on the node
+                    type: number
+                  clusterRoutingAllocationNodeConcurrentOutgoingRecoveries:
+                    description: |-
+                      (Number) How many outgoing recoveries where the source shard (likely the primary unless a shard is relocating) are allocated on the node
+                      How many outgoing recoveries where the source shard (likely the primary unless a shard is relocating) are allocated on the node
+                    type: number
+                  clusterRoutingAllocationNodeConcurrentRecoveries:
+                    description: |-
+                      (Number) A shortcut to set both incoming and outgoing recoveries
+                      A shortcut to set both incoming and outgoing recoveries
+                    type: number
+                  clusterRoutingAllocationNodeInitialPrimariesRecoveries:
+                    description: |-
+                      (Number) Set a (usually) higher rate for primary recovery on node restart (usually from disk, so fast)
+                      Set a (usually) higher rate for primary recovery on node restart (usually from disk, so fast)
+                    type: number
+                  clusterRoutingAllocationSameShardHost:
+                    description: |-
+                      (Boolean) Perform a check to prevent allocation of multiple instances of the same shard on a single host, if multiple nodes are started on the host
+                      Perform a check to prevent allocation of multiple instances of the same shard on a single host, if multiple nodes are started on the host
+                    type: boolean
+                  clusterRoutingAllocationTotalShardsPerNode:
+                    description: |-
+                      (Number) Maximum number of primary and replica shards allocated to each node
+                      Maximum number of primary and replica shards allocated to each node
+                    type: number
+                  clusterRoutingRebalanceEnable:
+                    description: |-
+                      (String) Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
+                      Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
+                    type: string
+                  indicesBreakerFielddataLimit:
+                    description: |-
+                      (String) The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
+                      The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
+                    type: string
+                  indicesBreakerFielddataOverhead:
+                    description: |-
+                      (Number) A constant that all field data estimations are multiplied by
+                      A constant that all field data estimations are multiplied by
+                    type: number
+                  indicesBreakerRequestLimit:
+                    description: |-
+                      request data structures (e.g. calculating aggregations) are prevented from exceeding
+                      The percentabge of memory above which per-request data structures (e.g. calculating aggregations) are prevented from exceeding
+                    type: string
+                  indicesBreakerRequestOverhead:
+                    description: |-
+                      (Number) A constant that all request estimations are multiplied by
+                      A constant that all request estimations are multiplied by
+                    type: number
+                  indicesBreakerTotalLimit:
+                    description: |-
+                      (String) The percentage of total amount of memory that can be used across all breakers
+                      The percentage of total amount of memory that can be used across all breakers
+                    type: string
+                  indicesRecoveryMaxBytesPerSec:
+                    description: |-
+                      (String) Maximum total inbound and outbound recovery traffic for each node, in mb
+                      Maximum total inbound and outbound recovery traffic for each node, in mb
+                    type: string
+                  networkBreakerInflightRequestsLimit:
+                    description: |-
+                      (String) The percentage limit of memory usage on a node of all currently active incoming requests on transport or HTTP level
+                      The percentage limit of memory usage on a node of all currently active incoming requests on transport or HTTP level
+                    type: string
+                  networkBreakerInflightRequestsOverhead:
+                    description: |-
+                      (Number) A constant that all in flight requests estimations are multiplied by
+                      A constant that all in flight requests estimations are multiplied by
+                    type: number
+                  scriptMaxCompilationsRate:
+                    description: |-
+                      (String) Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
+                      Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
+                    type: string
+                  searchDefaultSearchTimeout:
+                    description: |-
+                      wide default timeout for all search requests
+                      A time string setting a cluster-wide default timeout for all search requests
+                    type: string
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  actionAutoCreateIndex:
+                    description: |-
+                      (String) Whether to automatically create an index if it doesn’t already exist and apply any configured index template
+                      Whether to automatically create an index if it doesn’t already exist and apply any configured index template
+                    type: string
+                  actionDestructiveRequiresName:
+                    description: |-
+                      (Boolean) When set to true, you must specify the index name to delete an index and it is not possible to delete all indices with _all or use wildcards
+                      When set to true, you must specify the index name to delete an index and it is not possible to delete all indices with _all or use wildcards
+                    type: boolean
+                  clusterBlocksReadOnly:
+                    description: |-
+                      (Boolean) Make the whole cluster read only and metadata is not allowed to be modified
+                      Make the whole cluster read only and metadata is not allowed to be modified
+                    type: boolean
+                  clusterBlocksReadOnlyAllowDelete:
+                    description: |-
+                      (Boolean) Make the whole cluster read only, but allows to delete indices to free up resources
+                      Make the whole cluster read only, but allows to delete indices to free up resources
+                    type: boolean
+                  clusterIndicesCloseEnable:
+                    description: |-
+                      (Boolean) If false, you cannot close open indices
+                      If false, you cannot close open indices
+                    type: boolean
+                  clusterInfoUpdateInterval:
+                    description: |-
+                      (String) A time string controlling how often OpenSearch should check on disk usage for each node in the cluster
+                      A time string controlling how often OpenSearch should check on disk usage for each node in the cluster
+                    type: string
+                  clusterMaxShardsPerNode:
+                    description: |-
+                      frozen data nodes; shards for closed indices do not count toward this limit
+                      The total number of primary and replica shards for the cluster, this number is multiplied by the number of non-frozen data nodes; shards for closed indices do not count toward this limit
+                    type: number
+                  clusterMaxShardsPerNodeFrozen:
+                    description: |-
+                      (Number) The total number of primary and replica frozen shards, for the cluster; Ssards for closed indices do not count toward this limit, a cluster with no frozen data nodes is unlimited.
+                      The total number of primary and replica frozen shards, for the cluster; Ssards for closed indices do not count toward this limit, a cluster with no frozen data nodes is unlimited.
+                    type: number
+                  clusterNoMasterBlock:
+                    description: |-
+                      (String) Specifies which operations are rejected when there is no active master in a cluster (all, write)
+                      Specifies which operations are rejected when there is no active master in a cluster (all, write)
+                    type: string
+                  clusterPersistentTasksAllocationEnable:
+                    description: |-
+                      (String) Whether allocation for persistent tasks is active (all, none)
+                      Whether allocation for persistent tasks is active (all, none)
+                    type: string
+                  clusterPersistentTasksAllocationRecheckInterval:
+                    description: |-
+                      (String) A time string controling how often assignment checks are performed to react to whether persistent tasks can be assigned to nodes
+                      A time string controling how often assignment checks are performed to react to whether persistent tasks can be assigned to nodes
+                    type: string
+                  clusterRoutingAllocationAllowRebalance:
+                    description: |-
+                      (String) Specify when shard rebalancing is allowed (always, indices_primaries_active, indices_all_active)
+                      Specify when shard rebalancing is allowed (always, indices_primaries_active, indices_all_active)
+                    type: string
+                  clusterRoutingAllocationAwarenessAttributes:
+                    description: |-
+                      (String) Use custom node attributes to take hardware configuration into account when allocating shards
+                      Use custom node attributes to take hardware configuration into account when allocating shards
+                    type: string
+                  clusterRoutingAllocationBalanceIndex:
+                    description: |-
+                      (Number) Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
+                      Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
+                    type: number
+                  clusterRoutingAllocationBalanceShard:
+                    description: |-
+                      (Number) Weight factor for the total number of shards allocated on a node, increasing this raises the tendency to equalize the number of shards across all nodes
+                      Weight factor for the total number of shards allocated on a node, increasing this raises the tendency to equalize the number of shards across all nodes
+                    type: number
+                  clusterRoutingAllocationBalanceThreshold:
+                    description: |-
+                      (Number) Minimal optimization value of operations that should be performed, raising this will cause the cluster to be less aggressive about optimizing the shard balance
+                      Minimal optimization value of operations that should be performed, raising this will cause the cluster to be less aggressive about optimizing the shard balance
+                    type: number
+                  clusterRoutingAllocationClusterConcurrentRebalance:
+                    description: |-
+                      (Number) How many concurrent shard rebalances are allowed cluster wide
+                      How many concurrent shard rebalances are allowed cluster wide
+                    type: number
+                  clusterRoutingAllocationDiskIncludeRelocations:
+                    description: |-
+                      (Boolean) Whether the allocator will take into account shards that are currently being relocated to the target node when computing a node’s disk usage
+                      Whether the allocator will take into account shards that are currently being relocated to the target node when computing a node’s disk usage
+                    type: boolean
+                  clusterRoutingAllocationDiskThresholdEnabled:
+                    description: |-
+                      (Boolean) Whether the disk allocation decider is active
+                      Whether the disk allocation decider is active
+                    type: boolean
+                  clusterRoutingAllocationDiskWatermarkHigh:
+                    description: |-
+                      (String) Allocator will attempt to relocate shards away from a node whose disk usage is above this percentage disk used
+                      Allocator will attempt to relocate shards away from a node whose disk usage is above this percentage disk used
+                    type: string
+                  clusterRoutingAllocationDiskWatermarkLow:
+                    description: |-
+                      (String) Allocator will not allocate shards to nodes that have more than this percentage disk used
+                      Allocator will not allocate shards to nodes that have more than this percentage disk used
+                    type: string
+                  clusterRoutingAllocationEnable:
+                    description: |-
+                      (String) Enable or disable allocation for specific kinds of shards (all, primaries, new_primaries, none)
+                      Enable or disable allocation for specific kinds of shards (all, primaries, new_primaries, none)
+                    type: string
+                  clusterRoutingAllocationNodeConcurrentIncomingRecoveries:
+                    description: |-
+                      (Number) How many incoming recoveries where the target shard (likely the replica unless a shard is relocating) are allocated on the node
+                      How many incoming recoveries where the target shard (likely the replica unless a shard is relocating) are allocated on the node
+                    type: number
+                  clusterRoutingAllocationNodeConcurrentOutgoingRecoveries:
+                    description: |-
+                      (Number) How many outgoing recoveries where the source shard (likely the primary unless a shard is relocating) are allocated on the node
+                      How many outgoing recoveries where the source shard (likely the primary unless a shard is relocating) are allocated on the node
+                    type: number
+                  clusterRoutingAllocationNodeConcurrentRecoveries:
+                    description: |-
+                      (Number) A shortcut to set both incoming and outgoing recoveries
+                      A shortcut to set both incoming and outgoing recoveries
+                    type: number
+                  clusterRoutingAllocationNodeInitialPrimariesRecoveries:
+                    description: |-
+                      (Number) Set a (usually) higher rate for primary recovery on node restart (usually from disk, so fast)
+                      Set a (usually) higher rate for primary recovery on node restart (usually from disk, so fast)
+                    type: number
+                  clusterRoutingAllocationSameShardHost:
+                    description: |-
+                      (Boolean) Perform a check to prevent allocation of multiple instances of the same shard on a single host, if multiple nodes are started on the host
+                      Perform a check to prevent allocation of multiple instances of the same shard on a single host, if multiple nodes are started on the host
+                    type: boolean
+                  clusterRoutingAllocationTotalShardsPerNode:
+                    description: |-
+                      (Number) Maximum number of primary and replica shards allocated to each node
+                      Maximum number of primary and replica shards allocated to each node
+                    type: number
+                  clusterRoutingRebalanceEnable:
+                    description: |-
+                      (String) Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
+                      Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
+                    type: string
+                  indicesBreakerFielddataLimit:
+                    description: |-
+                      (String) The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
+                      The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
+                    type: string
+                  indicesBreakerFielddataOverhead:
+                    description: |-
+                      (Number) A constant that all field data estimations are multiplied by
+                      A constant that all field data estimations are multiplied by
+                    type: number
+                  indicesBreakerRequestLimit:
+                    description: |-
+                      request data structures (e.g. calculating aggregations) are prevented from exceeding
+                      The percentabge of memory above which per-request data structures (e.g. calculating aggregations) are prevented from exceeding
+                    type: string
+                  indicesBreakerRequestOverhead:
+                    description: |-
+                      (Number) A constant that all request estimations are multiplied by
+                      A constant that all request estimations are multiplied by
+                    type: number
+                  indicesBreakerTotalLimit:
+                    description: |-
+                      (String) The percentage of total amount of memory that can be used across all breakers
+                      The percentage of total amount of memory that can be used across all breakers
+                    type: string
+                  indicesRecoveryMaxBytesPerSec:
+                    description: |-
+                      (String) Maximum total inbound and outbound recovery traffic for each node, in mb
+                      Maximum total inbound and outbound recovery traffic for each node, in mb
+                    type: string
+                  networkBreakerInflightRequestsLimit:
+                    description: |-
+                      (String) The percentage limit of memory usage on a node of all currently active incoming requests on transport or HTTP level
+                      The percentage limit of memory usage on a node of all currently active incoming requests on transport or HTTP level
+                    type: string
+                  networkBreakerInflightRequestsOverhead:
+                    description: |-
+                      (Number) A constant that all in flight requests estimations are multiplied by
+                      A constant that all in flight requests estimations are multiplied by
+                    type: number
+                  scriptMaxCompilationsRate:
+                    description: |-
+                      (String) Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
+                      Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
+                    type: string
+                  searchDefaultSearchTimeout:
+                    description: |-
+                      wide default timeout for all search requests
+                      A time string setting a cluster-wide default timeout for all search requests
+                    type: string
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: |-
+                  PublishConnectionDetailsTo specifies the connection secret config which
+                  contains a name, metadata and a reference to secret store config to
+                  which any connection details for this managed resource should be written.
+                  Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: |-
+                      SecretStoreConfigRef specifies which secret store config should be used
+                      for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Annotations are the annotations to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.annotations".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Labels are the labels/tags to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      type:
+                        description: |-
+                          Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                  This field is planned to be replaced in a future release in favor of
+                  PublishConnectionDetailsTo. Currently, both could be set independently
+                  and connection details would be published to both without affecting
+                  each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: SettingsStatus defines the observed state of Settings.
+            properties:
+              atProvider:
+                properties:
+                  actionAutoCreateIndex:
+                    description: |-
+                      (String) Whether to automatically create an index if it doesn’t already exist and apply any configured index template
+                      Whether to automatically create an index if it doesn’t already exist and apply any configured index template
+                    type: string
+                  actionDestructiveRequiresName:
+                    description: |-
+                      (Boolean) When set to true, you must specify the index name to delete an index and it is not possible to delete all indices with _all or use wildcards
+                      When set to true, you must specify the index name to delete an index and it is not possible to delete all indices with _all or use wildcards
+                    type: boolean
+                  clusterBlocksReadOnly:
+                    description: |-
+                      (Boolean) Make the whole cluster read only and metadata is not allowed to be modified
+                      Make the whole cluster read only and metadata is not allowed to be modified
+                    type: boolean
+                  clusterBlocksReadOnlyAllowDelete:
+                    description: |-
+                      (Boolean) Make the whole cluster read only, but allows to delete indices to free up resources
+                      Make the whole cluster read only, but allows to delete indices to free up resources
+                    type: boolean
+                  clusterIndicesCloseEnable:
+                    description: |-
+                      (Boolean) If false, you cannot close open indices
+                      If false, you cannot close open indices
+                    type: boolean
+                  clusterInfoUpdateInterval:
+                    description: |-
+                      (String) A time string controlling how often OpenSearch should check on disk usage for each node in the cluster
+                      A time string controlling how often OpenSearch should check on disk usage for each node in the cluster
+                    type: string
+                  clusterMaxShardsPerNode:
+                    description: |-
+                      frozen data nodes; shards for closed indices do not count toward this limit
+                      The total number of primary and replica shards for the cluster, this number is multiplied by the number of non-frozen data nodes; shards for closed indices do not count toward this limit
+                    type: number
+                  clusterMaxShardsPerNodeFrozen:
+                    description: |-
+                      (Number) The total number of primary and replica frozen shards, for the cluster; Ssards for closed indices do not count toward this limit, a cluster with no frozen data nodes is unlimited.
+                      The total number of primary and replica frozen shards, for the cluster; Ssards for closed indices do not count toward this limit, a cluster with no frozen data nodes is unlimited.
+                    type: number
+                  clusterNoMasterBlock:
+                    description: |-
+                      (String) Specifies which operations are rejected when there is no active master in a cluster (all, write)
+                      Specifies which operations are rejected when there is no active master in a cluster (all, write)
+                    type: string
+                  clusterPersistentTasksAllocationEnable:
+                    description: |-
+                      (String) Whether allocation for persistent tasks is active (all, none)
+                      Whether allocation for persistent tasks is active (all, none)
+                    type: string
+                  clusterPersistentTasksAllocationRecheckInterval:
+                    description: |-
+                      (String) A time string controling how often assignment checks are performed to react to whether persistent tasks can be assigned to nodes
+                      A time string controling how often assignment checks are performed to react to whether persistent tasks can be assigned to nodes
+                    type: string
+                  clusterRoutingAllocationAllowRebalance:
+                    description: |-
+                      (String) Specify when shard rebalancing is allowed (always, indices_primaries_active, indices_all_active)
+                      Specify when shard rebalancing is allowed (always, indices_primaries_active, indices_all_active)
+                    type: string
+                  clusterRoutingAllocationAwarenessAttributes:
+                    description: |-
+                      (String) Use custom node attributes to take hardware configuration into account when allocating shards
+                      Use custom node attributes to take hardware configuration into account when allocating shards
+                    type: string
+                  clusterRoutingAllocationBalanceIndex:
+                    description: |-
+                      (Number) Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
+                      Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
+                    type: number
+                  clusterRoutingAllocationBalanceShard:
+                    description: |-
+                      (Number) Weight factor for the total number of shards allocated on a node, increasing this raises the tendency to equalize the number of shards across all nodes
+                      Weight factor for the total number of shards allocated on a node, increasing this raises the tendency to equalize the number of shards across all nodes
+                    type: number
+                  clusterRoutingAllocationBalanceThreshold:
+                    description: |-
+                      (Number) Minimal optimization value of operations that should be performed, raising this will cause the cluster to be less aggressive about optimizing the shard balance
+                      Minimal optimization value of operations that should be performed, raising this will cause the cluster to be less aggressive about optimizing the shard balance
+                    type: number
+                  clusterRoutingAllocationClusterConcurrentRebalance:
+                    description: |-
+                      (Number) How many concurrent shard rebalances are allowed cluster wide
+                      How many concurrent shard rebalances are allowed cluster wide
+                    type: number
+                  clusterRoutingAllocationDiskIncludeRelocations:
+                    description: |-
+                      (Boolean) Whether the allocator will take into account shards that are currently being relocated to the target node when computing a node’s disk usage
+                      Whether the allocator will take into account shards that are currently being relocated to the target node when computing a node’s disk usage
+                    type: boolean
+                  clusterRoutingAllocationDiskThresholdEnabled:
+                    description: |-
+                      (Boolean) Whether the disk allocation decider is active
+                      Whether the disk allocation decider is active
+                    type: boolean
+                  clusterRoutingAllocationDiskWatermarkHigh:
+                    description: |-
+                      (String) Allocator will attempt to relocate shards away from a node whose disk usage is above this percentage disk used
+                      Allocator will attempt to relocate shards away from a node whose disk usage is above this percentage disk used
+                    type: string
+                  clusterRoutingAllocationDiskWatermarkLow:
+                    description: |-
+                      (String) Allocator will not allocate shards to nodes that have more than this percentage disk used
+                      Allocator will not allocate shards to nodes that have more than this percentage disk used
+                    type: string
+                  clusterRoutingAllocationEnable:
+                    description: |-
+                      (String) Enable or disable allocation for specific kinds of shards (all, primaries, new_primaries, none)
+                      Enable or disable allocation for specific kinds of shards (all, primaries, new_primaries, none)
+                    type: string
+                  clusterRoutingAllocationNodeConcurrentIncomingRecoveries:
+                    description: |-
+                      (Number) How many incoming recoveries where the target shard (likely the replica unless a shard is relocating) are allocated on the node
+                      How many incoming recoveries where the target shard (likely the replica unless a shard is relocating) are allocated on the node
+                    type: number
+                  clusterRoutingAllocationNodeConcurrentOutgoingRecoveries:
+                    description: |-
+                      (Number) How many outgoing recoveries where the source shard (likely the primary unless a shard is relocating) are allocated on the node
+                      How many outgoing recoveries where the source shard (likely the primary unless a shard is relocating) are allocated on the node
+                    type: number
+                  clusterRoutingAllocationNodeConcurrentRecoveries:
+                    description: |-
+                      (Number) A shortcut to set both incoming and outgoing recoveries
+                      A shortcut to set both incoming and outgoing recoveries
+                    type: number
+                  clusterRoutingAllocationNodeInitialPrimariesRecoveries:
+                    description: |-
+                      (Number) Set a (usually) higher rate for primary recovery on node restart (usually from disk, so fast)
+                      Set a (usually) higher rate for primary recovery on node restart (usually from disk, so fast)
+                    type: number
+                  clusterRoutingAllocationSameShardHost:
+                    description: |-
+                      (Boolean) Perform a check to prevent allocation of multiple instances of the same shard on a single host, if multiple nodes are started on the host
+                      Perform a check to prevent allocation of multiple instances of the same shard on a single host, if multiple nodes are started on the host
+                    type: boolean
+                  clusterRoutingAllocationTotalShardsPerNode:
+                    description: |-
+                      (Number) Maximum number of primary and replica shards allocated to each node
+                      Maximum number of primary and replica shards allocated to each node
+                    type: number
+                  clusterRoutingRebalanceEnable:
+                    description: |-
+                      (String) Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
+                      Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
+                    type: string
+                  id:
+                    description: (String) The ID of this resource.
+                    type: string
+                  indicesBreakerFielddataLimit:
+                    description: |-
+                      (String) The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
+                      The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
+                    type: string
+                  indicesBreakerFielddataOverhead:
+                    description: |-
+                      (Number) A constant that all field data estimations are multiplied by
+                      A constant that all field data estimations are multiplied by
+                    type: number
+                  indicesBreakerRequestLimit:
+                    description: |-
+                      request data structures (e.g. calculating aggregations) are prevented from exceeding
+                      The percentabge of memory above which per-request data structures (e.g. calculating aggregations) are prevented from exceeding
+                    type: string
+                  indicesBreakerRequestOverhead:
+                    description: |-
+                      (Number) A constant that all request estimations are multiplied by
+                      A constant that all request estimations are multiplied by
+                    type: number
+                  indicesBreakerTotalLimit:
+                    description: |-
+                      (String) The percentage of total amount of memory that can be used across all breakers
+                      The percentage of total amount of memory that can be used across all breakers
+                    type: string
+                  indicesRecoveryMaxBytesPerSec:
+                    description: |-
+                      (String) Maximum total inbound and outbound recovery traffic for each node, in mb
+                      Maximum total inbound and outbound recovery traffic for each node, in mb
+                    type: string
+                  networkBreakerInflightRequestsLimit:
+                    description: |-
+                      (String) The percentage limit of memory usage on a node of all currently active incoming requests on transport or HTTP level
+                      The percentage limit of memory usage on a node of all currently active incoming requests on transport or HTTP level
+                    type: string
+                  networkBreakerInflightRequestsOverhead:
+                    description: |-
+                      (Number) A constant that all in flight requests estimations are multiplied by
+                      A constant that all in flight requests estimations are multiplied by
+                    type: number
+                  scriptMaxCompilationsRate:
+                    description: |-
+                      (String) Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
+                      Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
+                    type: string
+                  searchDefaultSearchTimeout:
+                    description: |-
+                      wide default timeout for all search requests
+                      A time string setting a cluster-wide default timeout for all search requests
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

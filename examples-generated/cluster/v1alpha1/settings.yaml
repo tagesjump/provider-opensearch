@@ -1,0 +1,12 @@
+apiVersion: cluster.opensearch.upbound.io/v1alpha1
+kind: Settings
+metadata:
+  annotations:
+    meta.upbound.io/example-id: cluster/v1alpha1/settings
+  labels:
+    testing.upbound.io/example-name: global
+  name: global
+spec:
+  forProvider:
+    actionAutoCreateIndex: my-index-000001,index10,-index1*,+ind*
+    clusterMaxShardsPerNode: 10

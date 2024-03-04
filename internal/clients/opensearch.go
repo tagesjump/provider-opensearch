@@ -75,6 +75,7 @@ const (
 	errTrackUsage           = "cannot track ProviderConfig usage"
 	errExtractCredentials   = "cannot extract credentials"
 	errUnmarshalCredentials = "cannot unmarshal opensearch credentials as JSON"
+	errNoRequiredFieldURL   = "Missing required field - url"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -115,11 +116,17 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		// set provider configuration
 		ps.Configuration = map[string]any{}
 
+		if value, ok := creds[url]; ok {
+			ps.Configuration[url] = value
+		} else {
+			return ps, errors.New(errNoRequiredFieldURL)
+		}
+
 		for _, setting := range []string{
 			awsAccessKey, awsAssumeRoleArn, awsAssumeRoleExternalId, awsProfile, awsRegion,
 			awsSecretKey, awsSignatureService, awsToken, cacertFile, clientCertPath, clientKeyPath,
 			healthcheck, hostOverride, insecure, opensearchVersion, password, proxy, signAwsRequests,
-			sniff, token, tokenName, username,versionPingTimeout,
+			sniff, token, tokenName, username, versionPingTimeout,
 		} {
 			if value, ok := creds[setting]; ok {
 				ps.Configuration[setting] = value

@@ -1,0 +1,57 @@
+apiVersion: opensearch.opensearch.upbound.io/v1alpha1
+kind: User
+metadata:
+  annotations:
+    meta.upbound.io/example-id: opensearch/v1alpha1/user
+  labels:
+    testing.upbound.io/example-name: mapper
+  name: mapper
+spec:
+  forProvider:
+    description: a reader role for our app
+    passwordSecretRef:
+      key: example-key
+      name: example-secret
+      namespace: upbound-system
+    username: app-reasdder
+
+---
+
+apiVersion: opensearch.opensearch.upbound.io/v1alpha1
+kind: Role
+metadata:
+  annotations:
+    meta.upbound.io/example-id: opensearch/v1alpha1/user
+  labels:
+    testing.upbound.io/example-name: reader
+  name: reader
+spec:
+  forProvider:
+    description: App Reader Role
+    indexPermissions:
+    - allowedActions:
+      - get
+      - read
+      - search
+      indexPatterns:
+      - app-*
+    roleName: app_reader
+
+---
+
+apiVersion: roles.opensearch.upbound.io/v1alpha1
+kind: Mapping
+metadata:
+  annotations:
+    meta.upbound.io/example-id: opensearch/v1alpha1/user
+  labels:
+    testing.upbound.io/example-name: reader
+  name: reader
+spec:
+  forProvider:
+    description: App Reader Role
+    roleNameSelector:
+      matchLabels:
+        testing.upbound.io/example-name: reader
+    usersRefs:
+    - name: reader

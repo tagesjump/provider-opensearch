@@ -1,0 +1,13 @@
+apiVersion: opensearch.opensearch.upbound.io/v1alpha1
+kind: Script
+metadata:
+  annotations:
+    meta.upbound.io/example-id: opensearch/v1alpha1/script
+  labels:
+    testing.upbound.io/example-name: test_script
+  name: test-script
+spec:
+  forProvider:
+    lang: painless
+    scriptId: my_script
+    source: Math.log(_score * 2) + params.my_modifier

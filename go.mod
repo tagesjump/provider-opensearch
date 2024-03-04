@@ -3,6 +3,7 @@ module github.com/tagesjump/provider-opensearch
 go 1.22
 
 require (
+	dario.cat/mergo v1.0.0
 	github.com/crossplane/crossplane-runtime v1.15.0
 	github.com/crossplane/crossplane-tools v0.0.0-20230925130601-628280f8bf79
 	github.com/crossplane/upjet v1.2.0
@@ -15,7 +16,6 @@ require (
 )
 
 require (
-	dario.cat/mergo v1.0.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect

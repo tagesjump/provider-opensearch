@@ -1,0 +1,1242 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: indices.opensearch.opensearch.upbound.io
+spec:
+  group: opensearch.opensearch.upbound.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - opensearch
+    kind: Index
+    listKind: IndexList
+    plural: indices
+    singular: index
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Index is the Schema for the Indexs API. Provides an OpenSearch
+          index resource.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: IndexSpec defines the desired state of Index
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  aliases:
+                    description: |-
+                      (String) A JSON string describing a set of aliases. The index aliases API allows aliasing an index with a name, with all APIs automatically converting the alias name to the actual index name. An alias can also be mapped to more than one index, and when specifying it, the alias will automatically expand to the aliased indices.
+                      A JSON string describing a set of aliases. The index aliases API allows aliasing an index with a name, with all APIs automatically converting the alias name to the actual index name. An alias can also be mapped to more than one index, and when specifying it, the alias will automatically expand to the aliased indices.
+                    type: string
+                  analysisAnalyzer:
+                    description: |-
+                      (String) A JSON string describing the analyzers applied to the index.
+                      A JSON string describing the analyzers applied to the index.
+                    type: string
+                  analysisCharFilter:
+                    description: |-
+                      (String) A JSON string describing the char_filters applied to the index.
+                      A JSON string describing the char_filters applied to the index.
+                    type: string
+                  analysisFilter:
+                    description: |-
+                      (String) A JSON string describing the filters applied to the index.
+                      A JSON string describing the filters applied to the index.
+                    type: string
+                  analysisNormalizer:
+                    description: |-
+                      (String) A JSON string describing the normalizers applied to the index.
+                      A JSON string describing the normalizers applied to the index.
+                    type: string
+                  analysisTokenizer:
+                    description: |-
+                      (String) A JSON string describing the tokenizers applied to the index.
+                      A JSON string describing the tokenizers applied to the index.
+                    type: string
+                  analyzeMaxTokenCount:
+                    description: |-
+                      (String) The maximum number of tokens that can be produced using _analyze API. A stringified number.
+                      The maximum number of tokens that can be produced using _analyze API. A stringified number.
+                    type: string
+                  autoExpandReplicas:
+                    description: |-
+                      5) or use all for the upper bound (e.g. 0-all)
+                      Set the number of replicas to the node count in the cluster. Set to a dash delimited lower and upper bound (e.g. 0-5) or use all for the upper bound (e.g. 0-all)
+                    type: string
+                  blocksMetadata:
+                    description: |-
+                      (Boolean) Set to true to disable index metadata reads and writes.
+                      Set to `true` to disable index metadata reads and writes.
+                    type: boolean
+                  blocksRead:
+                    description: |-
+                      (Boolean) Set to true to disable read operations against the index.
+                      Set to `true` to disable read operations against the index.
+                    type: boolean
+                  blocksReadOnly:
+                    description: |-
+                      (Boolean) Set to true to make the index and index metadata read only, false to allow writes and metadata changes.
+                      Set to `true` to make the index and index metadata read only, `false` to allow writes and metadata changes.
+                    type: boolean
+                  blocksReadOnlyAllowDelete:
+                    description: |-
+                      (Boolean) Identical to index.blocks.read_only but allows deleting the index to free up resources.
+                      Identical to `index.blocks.read_only` but allows deleting the index to free up resources.
+                    type: boolean
+                  blocksWrite:
+                    description: |-
+                      (Boolean) Set to true to disable data write operations against the index. This setting does not affect metadata.
+                      Set to `true` to disable data write operations against the index. This setting does not affect metadata.
+                    type: boolean
+                  codec:
+                    description: |-
+                      (String) The default value compresses stored data with LZ4 compression, but this can be set to best_compression which uses DEFLATE for a higher compression ratio. This can be set only on creation.
+                      The `default` value compresses stored data with LZ4 compression, but this can be set to `best_compression` which uses DEFLATE for a higher compression ratio. This can be set only on creation.
+                    type: string
+                  defaultPipeline:
+                    description: |-
+                      (String) The default ingest node pipeline for this index. Index requests will fail if the default pipeline is set and the pipeline does not exist.
+                      The default ingest node pipeline for this index. Index requests will fail if the default pipeline is set and the pipeline does not exist.
+                    type: string
+                  forceDestroy:
+                    description: |-
+                      (Boolean) A boolean that indicates that the index should be deleted even if it contains documents.
+                      A boolean that indicates that the index should be deleted even if it contains documents.
+                    type: boolean
+                  gcDeletes:
+                    description: |-
+                      (String) The length of time that a deleted document's version number remains available for further versioned operations.
+                      The length of time that a deleted document's version number remains available for further versioned operations.
+                    type: string
+                  highlightMaxAnalyzedOffset:
+                    description: |-
+                      (String) The maximum number of characters that will be analyzed for a highlight request. A stringified number.
+                      The maximum number of characters that will be analyzed for a highlight request. A stringified number.
+                    type: string
+                  includeTypeName:
+                    description: |-
+                      (String) A string that indicates if and what we should pass to include_type_name parameter. Set to "false" when trying to create an index on a v6 cluster without a doc type or set to "true" when trying to create an index on a v7 cluster with a doc type. Since mapping updates are not currently supported, this applies only on index create.
+                      A string that indicates if and what we should pass to include_type_name parameter. Set to `"false"` when trying to create an index on a v6 cluster without a doc type or set to `"true"` when trying to create an index on a v7 cluster with a doc type. Since mapping updates are not currently supported, this applies only on index create.
+                    type: string
+                  indexKnn:
+                    description: |-
+                      NN search functionality will be disabled.
+                      Indicates whether the index should build native library indices for the knn_vector fields. If set to false, the knn_vector fields will be stored in doc values, but Approximate k-NN search functionality will be disabled.
+                    type: boolean
+                  indexKnnAlgoParamEfSearch:
+                    description: |-
+                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib implementation.
+                      The size of the dynamic list used during k-NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
+                    type: string
+                  indexSimilarityDefault:
+                    description: |-
+                      (String) A JSON string describing the default index similarity config.
+                      A JSON string describing the default index similarity config.
+                    type: string
+                  indexingSlowlogLevel:
+                    description: |-
+                      (String) Set which logging level to use for the search slow log, can be: warn, info, debug, trace
+                      Set which logging level to use for the search slow log, can be: `warn`, `info`, `debug`, `trace`
+                    type: string
+                  indexingSlowlogSource:
+                    description: |-
+                      (String) Set the number of characters of the _source to include in the slowlog lines, false or 0 will skip logging the source entirely and setting it to true will log the entire source regardless of size. The original _source is reformatted by default to make sure that it fits on a single log line.
+                      Set the number of characters of the `_source` to include in the slowlog lines, `false` or `0` will skip logging the source entirely and setting it to `true` will log the entire source regardless of size. The original `_source` is reformatted by default to make sure that it fits on a single log line.
+                    type: string
+                  indexingSlowlogThresholdIndexDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `2s`
+                    type: string
+                  indexingSlowlogThresholdIndexInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `5s`
+                    type: string
+                  indexingSlowlogThresholdIndexTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `500ms`
+                    type: string
+                  indexingSlowlogThresholdIndexWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `10s`
+                    type: string
+                  loadFixedBitsetFiltersEagerly:
+                    description: |-
+                      loaded for nested queries. This can be set only on creation.
+                      Indicates whether cached filters are pre-loaded for nested queries. This can be set only on creation.
+                    type: boolean
+                  mappings:
+                    description: |-
+                      (String) A JSON string defining how documents in the index, and the fields they contain, are stored and indexed. To avoid the complexities of field mapping updates, updates of this field are not allowed via this provider.
+                      A JSON string defining how documents in the index, and the fields they contain, are stored and indexed. To avoid the complexities of field mapping updates, updates of this field are not allowed via this provider.
+                    type: string
+                  maxDocvalueFieldsSearch:
+                    description: |-
+                      (String) The maximum number of docvalue_fields that are allowed in a query. A stringified number.
+                      The maximum number of `docvalue_fields` that are allowed in a query. A stringified number.
+                    type: string
+                  maxInnerResultWindow:
+                    description: |-
+                      (String) The maximum value of from + size for inner hits definition and top hits aggregations to this index. A stringified number.
+                      The maximum value of `from + size` for inner hits definition and top hits aggregations to this index. A stringified number.
+                    type: string
+                  maxNgramDiff:
+                    description: |-
+                      (String) The maximum allowed difference between min_gram and max_gram for NGramTokenizer and NGramTokenFilter. A stringified number.
+                      The maximum allowed difference between min_gram and max_gram for NGramTokenizer and NGramTokenFilter. A stringified number.
+                    type: string
+                  maxRefreshListeners:
+                    description: |-
+                      (String) Maximum number of refresh listeners available on each shard of the index. A stringified number.
+                      Maximum number of refresh listeners available on each shard of the index. A stringified number.
+                    type: string
+                  maxRegexLength:
+                    description: |-
+                      (String) The maximum length of regex that can be used in Regexp Query. A stringified number.
+                      The maximum length of regex that can be used in Regexp Query. A stringified number.
+                    type: string
+                  maxRescoreWindow:
+                    description: |-
+                      (String) The maximum value of window_size for rescore requests in searches of this index. A stringified number.
+                      The maximum value of `window_size` for `rescore` requests in searches of this index. A stringified number.
+                    type: string
+                  maxResultWindow:
+                    description: |-
+                      (String) The maximum value of from + size for searches to this index. A stringified number.
+                      The maximum value of `from + size` for searches to this index. A stringified number.
+                    type: string
+                  maxScriptFields:
+                    description: |-
+                      (String) The maximum number of script_fields that are allowed in a query. A stringified number.
+                      The maximum number of `script_fields` that are allowed in a query. A stringified number.
+                    type: string
+                  maxShingleDiff:
+                    description: |-
+                      (String) The maximum allowed difference between max_shingle_size and min_shingle_size for ShingleTokenFilter. A stringified number.
+                      The maximum allowed difference between max_shingle_size and min_shingle_size for ShingleTokenFilter. A stringified number.
+                    type: string
+                  maxTermsCount:
+                    description: |-
+                      (String) The maximum number of terms that can be used in Terms Query. A stringified number.
+                      The maximum number of terms that can be used in Terms Query. A stringified number.
+                    type: string
+                  name:
+                    description: |-
+                      (String) Name of the index to create
+                      Name of the index to create
+                    type: string
+                  numberOfReplicas:
+                    description: |-
+                      (String) Number of shard replicas. A stringified number.
+                      Number of shard replicas. A stringified number.
+                    type: string
+                  numberOfRoutingShards:
+                    description: |-
+                      (String) Value used with number_of_shards to route documents to a primary shard. A stringified number. This can be set only on creation.
+                      Value used with number_of_shards to route documents to a primary shard. A stringified number. This can be set only on creation.
+                    type: string
+                  numberOfShards:
+                    description: |-
+                      (String) Number of shards for the index. This can be set only on creation.
+                      Number of shards for the index. This can be set only on creation.
+                    type: string
+                  refreshInterval:
+                    description: |-
+                      1 to disable refresh.
+                      How often to perform a refresh operation, which makes recent changes to the index visible to search. Can be set to `-1` to disable refresh.
+                    type: string
+                  rolloverAlias:
+                    description: (String)
+                    type: string
+                  routingAllocationEnable:
+                    description: |-
+                      (String) Controls shard allocation for this index. It can be set to: all , primaries , new_primaries , none.
+                      Controls shard allocation for this index. It can be set to: `all` , `primaries` , `new_primaries` , `none`.
+                    type: string
+                  routingPartitionSize:
+                    description: |-
+                      (String) The number of shards a custom routing value can go to. A stringified number. This can be set only on creation.
+                      The number of shards a custom routing value can go to. A stringified number. This can be set only on creation.
+                    type: string
+                  routingRebalanceEnable:
+                    description: |-
+                      (String) Enables shard rebalancing for this index. It can be set to: all, primaries , replicas , none.
+                      Enables shard rebalancing for this index. It can be set to: `all`, `primaries` , `replicas` , `none`.
+                    type: string
+                  searchIdleAfter:
+                    description: |-
+                      (String) How long a shard can not receive a search or get request until it’s considered search idle.
+                      How long a shard can not receive a search or get request until it’s considered search idle.
+                    type: string
+                  searchSlowlogLevel:
+                    description: |-
+                      (String) Set which logging level to use for the search slow log, can be: warn, info, debug, trace
+                      Set which logging level to use for the search slow log, can be: `warn`, `info`, `debug`, `trace`
+                    type: string
+                  searchSlowlogThresholdFetchDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `2s`
+                    type: string
+                  searchSlowlogThresholdFetchInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `5s`
+                    type: string
+                  searchSlowlogThresholdFetchTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `500ms`
+                    type: string
+                  searchSlowlogThresholdFetchWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `10s`
+                    type: string
+                  searchSlowlogThresholdQueryDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `2s`
+                    type: string
+                  searchSlowlogThresholdQueryInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `5s`
+                    type: string
+                  searchSlowlogThresholdQueryTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `500ms`
+                    type: string
+                  searchSlowlogThresholdQueryWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `10s`
+                    type: string
+                  shardCheckOnStartup:
+                    description: |-
+                      (String) Whether or not shards should be checked for corruption before opening. When corruption is detected, it will prevent the shard from being opened. Accepts false, true, checksum.
+                      Whether or not shards should be checked for corruption before opening. When corruption is detected, it will prevent the shard from being opened. Accepts `false`, `true`, `checksum`.
+                    type: string
+                  sortField:
+                    description: |-
+                      (String) The field to sort shards in this index by.
+                      The field to sort shards in this index by.
+                    type: string
+                  sortOrder:
+                    description: |-
+                      (String) The direction to sort shards in. Accepts asc, desc.
+                      The direction to sort shards in. Accepts `asc`, `desc`.
+                    type: string
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  aliases:
+                    description: |-
+                      (String) A JSON string describing a set of aliases. The index aliases API allows aliasing an index with a name, with all APIs automatically converting the alias name to the actual index name. An alias can also be mapped to more than one index, and when specifying it, the alias will automatically expand to the aliased indices.
+                      A JSON string describing a set of aliases. The index aliases API allows aliasing an index with a name, with all APIs automatically converting the alias name to the actual index name. An alias can also be mapped to more than one index, and when specifying it, the alias will automatically expand to the aliased indices.
+                    type: string
+                  analysisAnalyzer:
+                    description: |-
+                      (String) A JSON string describing the analyzers applied to the index.
+                      A JSON string describing the analyzers applied to the index.
+                    type: string
+                  analysisCharFilter:
+                    description: |-
+                      (String) A JSON string describing the char_filters applied to the index.
+                      A JSON string describing the char_filters applied to the index.
+                    type: string
+                  analysisFilter:
+                    description: |-
+                      (String) A JSON string describing the filters applied to the index.
+                      A JSON string describing the filters applied to the index.
+                    type: string
+                  analysisNormalizer:
+                    description: |-
+                      (String) A JSON string describing the normalizers applied to the index.
+                      A JSON string describing the normalizers applied to the index.
+                    type: string
+                  analysisTokenizer:
+                    description: |-
+                      (String) A JSON string describing the tokenizers applied to the index.
+                      A JSON string describing the tokenizers applied to the index.
+                    type: string
+                  analyzeMaxTokenCount:
+                    description: |-
+                      (String) The maximum number of tokens that can be produced using _analyze API. A stringified number.
+                      The maximum number of tokens that can be produced using _analyze API. A stringified number.
+                    type: string
+                  autoExpandReplicas:
+                    description: |-
+                      5) or use all for the upper bound (e.g. 0-all)
+                      Set the number of replicas to the node count in the cluster. Set to a dash delimited lower and upper bound (e.g. 0-5) or use all for the upper bound (e.g. 0-all)
+                    type: string
+                  blocksMetadata:
+                    description: |-
+                      (Boolean) Set to true to disable index metadata reads and writes.
+                      Set to `true` to disable index metadata reads and writes.
+                    type: boolean
+                  blocksRead:
+                    description: |-
+                      (Boolean) Set to true to disable read operations against the index.
+                      Set to `true` to disable read operations against the index.
+                    type: boolean
+                  blocksReadOnly:
+                    description: |-
+                      (Boolean) Set to true to make the index and index metadata read only, false to allow writes and metadata changes.
+                      Set to `true` to make the index and index metadata read only, `false` to allow writes and metadata changes.
+                    type: boolean
+                  blocksReadOnlyAllowDelete:
+                    description: |-
+                      (Boolean) Identical to index.blocks.read_only but allows deleting the index to free up resources.
+                      Identical to `index.blocks.read_only` but allows deleting the index to free up resources.
+                    type: boolean
+                  blocksWrite:
+                    description: |-
+                      (Boolean) Set to true to disable data write operations against the index. This setting does not affect metadata.
+                      Set to `true` to disable data write operations against the index. This setting does not affect metadata.
+                    type: boolean
+                  codec:
+                    description: |-
+                      (String) The default value compresses stored data with LZ4 compression, but this can be set to best_compression which uses DEFLATE for a higher compression ratio. This can be set only on creation.
+                      The `default` value compresses stored data with LZ4 compression, but this can be set to `best_compression` which uses DEFLATE for a higher compression ratio. This can be set only on creation.
+                    type: string
+                  defaultPipeline:
+                    description: |-
+                      (String) The default ingest node pipeline for this index. Index requests will fail if the default pipeline is set and the pipeline does not exist.
+                      The default ingest node pipeline for this index. Index requests will fail if the default pipeline is set and the pipeline does not exist.
+                    type: string
+                  forceDestroy:
+                    description: |-
+                      (Boolean) A boolean that indicates that the index should be deleted even if it contains documents.
+                      A boolean that indicates that the index should be deleted even if it contains documents.
+                    type: boolean
+                  gcDeletes:
+                    description: |-
+                      (String) The length of time that a deleted document's version number remains available for further versioned operations.
+                      The length of time that a deleted document's version number remains available for further versioned operations.
+                    type: string
+                  highlightMaxAnalyzedOffset:
+                    description: |-
+                      (String) The maximum number of characters that will be analyzed for a highlight request. A stringified number.
+                      The maximum number of characters that will be analyzed for a highlight request. A stringified number.
+                    type: string
+                  includeTypeName:
+                    description: |-
+                      (String) A string that indicates if and what we should pass to include_type_name parameter. Set to "false" when trying to create an index on a v6 cluster without a doc type or set to "true" when trying to create an index on a v7 cluster with a doc type. Since mapping updates are not currently supported, this applies only on index create.
+                      A string that indicates if and what we should pass to include_type_name parameter. Set to `"false"` when trying to create an index on a v6 cluster without a doc type or set to `"true"` when trying to create an index on a v7 cluster with a doc type. Since mapping updates are not currently supported, this applies only on index create.
+                    type: string
+                  indexKnn:
+                    description: |-
+                      NN search functionality will be disabled.
+                      Indicates whether the index should build native library indices for the knn_vector fields. If set to false, the knn_vector fields will be stored in doc values, but Approximate k-NN search functionality will be disabled.
+                    type: boolean
+                  indexKnnAlgoParamEfSearch:
+                    description: |-
+                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib implementation.
+                      The size of the dynamic list used during k-NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
+                    type: string
+                  indexSimilarityDefault:
+                    description: |-
+                      (String) A JSON string describing the default index similarity config.
+                      A JSON string describing the default index similarity config.
+                    type: string
+                  indexingSlowlogLevel:
+                    description: |-
+                      (String) Set which logging level to use for the search slow log, can be: warn, info, debug, trace
+                      Set which logging level to use for the search slow log, can be: `warn`, `info`, `debug`, `trace`
+                    type: string
+                  indexingSlowlogSource:
+                    description: |-
+                      (String) Set the number of characters of the _source to include in the slowlog lines, false or 0 will skip logging the source entirely and setting it to true will log the entire source regardless of size. The original _source is reformatted by default to make sure that it fits on a single log line.
+                      Set the number of characters of the `_source` to include in the slowlog lines, `false` or `0` will skip logging the source entirely and setting it to `true` will log the entire source regardless of size. The original `_source` is reformatted by default to make sure that it fits on a single log line.
+                    type: string
+                  indexingSlowlogThresholdIndexDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `2s`
+                    type: string
+                  indexingSlowlogThresholdIndexInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `5s`
+                    type: string
+                  indexingSlowlogThresholdIndexTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `500ms`
+                    type: string
+                  indexingSlowlogThresholdIndexWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `10s`
+                    type: string
+                  loadFixedBitsetFiltersEagerly:
+                    description: |-
+                      loaded for nested queries. This can be set only on creation.
+                      Indicates whether cached filters are pre-loaded for nested queries. This can be set only on creation.
+                    type: boolean
+                  mappings:
+                    description: |-
+                      (String) A JSON string defining how documents in the index, and the fields they contain, are stored and indexed. To avoid the complexities of field mapping updates, updates of this field are not allowed via this provider.
+                      A JSON string defining how documents in the index, and the fields they contain, are stored and indexed. To avoid the complexities of field mapping updates, updates of this field are not allowed via this provider.
+                    type: string
+                  maxDocvalueFieldsSearch:
+                    description: |-
+                      (String) The maximum number of docvalue_fields that are allowed in a query. A stringified number.
+                      The maximum number of `docvalue_fields` that are allowed in a query. A stringified number.
+                    type: string
+                  maxInnerResultWindow:
+                    description: |-
+                      (String) The maximum value of from + size for inner hits definition and top hits aggregations to this index. A stringified number.
+                      The maximum value of `from + size` for inner hits definition and top hits aggregations to this index. A stringified number.
+                    type: string
+                  maxNgramDiff:
+                    description: |-
+                      (String) The maximum allowed difference between min_gram and max_gram for NGramTokenizer and NGramTokenFilter. A stringified number.
+                      The maximum allowed difference between min_gram and max_gram for NGramTokenizer and NGramTokenFilter. A stringified number.
+                    type: string
+                  maxRefreshListeners:
+                    description: |-
+                      (String) Maximum number of refresh listeners available on each shard of the index. A stringified number.
+                      Maximum number of refresh listeners available on each shard of the index. A stringified number.
+                    type: string
+                  maxRegexLength:
+                    description: |-
+                      (String) The maximum length of regex that can be used in Regexp Query. A stringified number.
+                      The maximum length of regex that can be used in Regexp Query. A stringified number.
+                    type: string
+                  maxRescoreWindow:
+                    description: |-
+                      (String) The maximum value of window_size for rescore requests in searches of this index. A stringified number.
+                      The maximum value of `window_size` for `rescore` requests in searches of this index. A stringified number.
+                    type: string
+                  maxResultWindow:
+                    description: |-
+                      (String) The maximum value of from + size for searches to this index. A stringified number.
+                      The maximum value of `from + size` for searches to this index. A stringified number.
+                    type: string
+                  maxScriptFields:
+                    description: |-
+                      (String) The maximum number of script_fields that are allowed in a query. A stringified number.
+                      The maximum number of `script_fields` that are allowed in a query. A stringified number.
+                    type: string
+                  maxShingleDiff:
+                    description: |-
+                      (String) The maximum allowed difference between max_shingle_size and min_shingle_size for ShingleTokenFilter. A stringified number.
+                      The maximum allowed difference between max_shingle_size and min_shingle_size for ShingleTokenFilter. A stringified number.
+                    type: string
+                  maxTermsCount:
+                    description: |-
+                      (String) The maximum number of terms that can be used in Terms Query. A stringified number.
+                      The maximum number of terms that can be used in Terms Query. A stringified number.
+                    type: string
+                  name:
+                    description: |-
+                      (String) Name of the index to create
+                      Name of the index to create
+                    type: string
+                  numberOfReplicas:
+                    description: |-
+                      (String) Number of shard replicas. A stringified number.
+                      Number of shard replicas. A stringified number.
+                    type: string
+                  numberOfRoutingShards:
+                    description: |-
+                      (String) Value used with number_of_shards to route documents to a primary shard. A stringified number. This can be set only on creation.
+                      Value used with number_of_shards to route documents to a primary shard. A stringified number. This can be set only on creation.
+                    type: string
+                  numberOfShards:
+                    description: |-
+                      (String) Number of shards for the index. This can be set only on creation.
+                      Number of shards for the index. This can be set only on creation.
+                    type: string
+                  refreshInterval:
+                    description: |-
+                      1 to disable refresh.
+                      How often to perform a refresh operation, which makes recent changes to the index visible to search. Can be set to `-1` to disable refresh.
+                    type: string
+                  rolloverAlias:
+                    description: (String)
+                    type: string
+                  routingAllocationEnable:
+                    description: |-
+                      (String) Controls shard allocation for this index. It can be set to: all , primaries , new_primaries , none.
+                      Controls shard allocation for this index. It can be set to: `all` , `primaries` , `new_primaries` , `none`.
+                    type: string
+                  routingPartitionSize:
+                    description: |-
+                      (String) The number of shards a custom routing value can go to. A stringified number. This can be set only on creation.
+                      The number of shards a custom routing value can go to. A stringified number. This can be set only on creation.
+                    type: string
+                  routingRebalanceEnable:
+                    description: |-
+                      (String) Enables shard rebalancing for this index. It can be set to: all, primaries , replicas , none.
+                      Enables shard rebalancing for this index. It can be set to: `all`, `primaries` , `replicas` , `none`.
+                    type: string
+                  searchIdleAfter:
+                    description: |-
+                      (String) How long a shard can not receive a search or get request until it’s considered search idle.
+                      How long a shard can not receive a search or get request until it’s considered search idle.
+                    type: string
+                  searchSlowlogLevel:
+                    description: |-
+                      (String) Set which logging level to use for the search slow log, can be: warn, info, debug, trace
+                      Set which logging level to use for the search slow log, can be: `warn`, `info`, `debug`, `trace`
+                    type: string
+                  searchSlowlogThresholdFetchDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `2s`
+                    type: string
+                  searchSlowlogThresholdFetchInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `5s`
+                    type: string
+                  searchSlowlogThresholdFetchTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `500ms`
+                    type: string
+                  searchSlowlogThresholdFetchWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `10s`
+                    type: string
+                  searchSlowlogThresholdQueryDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `2s`
+                    type: string
+                  searchSlowlogThresholdQueryInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `5s`
+                    type: string
+                  searchSlowlogThresholdQueryTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `500ms`
+                    type: string
+                  searchSlowlogThresholdQueryWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `10s`
+                    type: string
+                  shardCheckOnStartup:
+                    description: |-
+                      (String) Whether or not shards should be checked for corruption before opening. When corruption is detected, it will prevent the shard from being opened. Accepts false, true, checksum.
+                      Whether or not shards should be checked for corruption before opening. When corruption is detected, it will prevent the shard from being opened. Accepts `false`, `true`, `checksum`.
+                    type: string
+                  sortField:
+                    description: |-
+                      (String) The field to sort shards in this index by.
+                      The field to sort shards in this index by.
+                    type: string
+                  sortOrder:
+                    description: |-
+                      (String) The direction to sort shards in. Accepts asc, desc.
+                      The direction to sort shards in. Accepts `asc`, `desc`.
+                    type: string
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: |-
+                  PublishConnectionDetailsTo specifies the connection secret config which
+                  contains a name, metadata and a reference to secret store config to
+                  which any connection details for this managed resource should be written.
+                  Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: |-
+                      SecretStoreConfigRef specifies which secret store config should be used
+                      for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Annotations are the annotations to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.annotations".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Labels are the labels/tags to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      type:
+                        description: |-
+                          Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                  This field is planned to be replaced in a future release in favor of
+                  PublishConnectionDetailsTo. Currently, both could be set independently
+                  and connection details would be published to both without affecting
+                  each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+          status:
+            description: IndexStatus defines the observed state of Index.
+            properties:
+              atProvider:
+                properties:
+                  aliases:
+                    description: |-
+                      (String) A JSON string describing a set of aliases. The index aliases API allows aliasing an index with a name, with all APIs automatically converting the alias name to the actual index name. An alias can also be mapped to more than one index, and when specifying it, the alias will automatically expand to the aliased indices.
+                      A JSON string describing a set of aliases. The index aliases API allows aliasing an index with a name, with all APIs automatically converting the alias name to the actual index name. An alias can also be mapped to more than one index, and when specifying it, the alias will automatically expand to the aliased indices.
+                    type: string
+                  analysisAnalyzer:
+                    description: |-
+                      (String) A JSON string describing the analyzers applied to the index.
+                      A JSON string describing the analyzers applied to the index.
+                    type: string
+                  analysisCharFilter:
+                    description: |-
+                      (String) A JSON string describing the char_filters applied to the index.
+                      A JSON string describing the char_filters applied to the index.
+                    type: string
+                  analysisFilter:
+                    description: |-
+                      (String) A JSON string describing the filters applied to the index.
+                      A JSON string describing the filters applied to the index.
+                    type: string
+                  analysisNormalizer:
+                    description: |-
+                      (String) A JSON string describing the normalizers applied to the index.
+                      A JSON string describing the normalizers applied to the index.
+                    type: string
+                  analysisTokenizer:
+                    description: |-
+                      (String) A JSON string describing the tokenizers applied to the index.
+                      A JSON string describing the tokenizers applied to the index.
+                    type: string
+                  analyzeMaxTokenCount:
+                    description: |-
+                      (String) The maximum number of tokens that can be produced using _analyze API. A stringified number.
+                      The maximum number of tokens that can be produced using _analyze API. A stringified number.
+                    type: string
+                  autoExpandReplicas:
+                    description: |-
+                      5) or use all for the upper bound (e.g. 0-all)
+                      Set the number of replicas to the node count in the cluster. Set to a dash delimited lower and upper bound (e.g. 0-5) or use all for the upper bound (e.g. 0-all)
+                    type: string
+                  blocksMetadata:
+                    description: |-
+                      (Boolean) Set to true to disable index metadata reads and writes.
+                      Set to `true` to disable index metadata reads and writes.
+                    type: boolean
+                  blocksRead:
+                    description: |-
+                      (Boolean) Set to true to disable read operations against the index.
+                      Set to `true` to disable read operations against the index.
+                    type: boolean
+                  blocksReadOnly:
+                    description: |-
+                      (Boolean) Set to true to make the index and index metadata read only, false to allow writes and metadata changes.
+                      Set to `true` to make the index and index metadata read only, `false` to allow writes and metadata changes.
+                    type: boolean
+                  blocksReadOnlyAllowDelete:
+                    description: |-
+                      (Boolean) Identical to index.blocks.read_only but allows deleting the index to free up resources.
+                      Identical to `index.blocks.read_only` but allows deleting the index to free up resources.
+                    type: boolean
+                  blocksWrite:
+                    description: |-
+                      (Boolean) Set to true to disable data write operations against the index. This setting does not affect metadata.
+                      Set to `true` to disable data write operations against the index. This setting does not affect metadata.
+                    type: boolean
+                  codec:
+                    description: |-
+                      (String) The default value compresses stored data with LZ4 compression, but this can be set to best_compression which uses DEFLATE for a higher compression ratio. This can be set only on creation.
+                      The `default` value compresses stored data with LZ4 compression, but this can be set to `best_compression` which uses DEFLATE for a higher compression ratio. This can be set only on creation.
+                    type: string
+                  defaultPipeline:
+                    description: |-
+                      (String) The default ingest node pipeline for this index. Index requests will fail if the default pipeline is set and the pipeline does not exist.
+                      The default ingest node pipeline for this index. Index requests will fail if the default pipeline is set and the pipeline does not exist.
+                    type: string
+                  forceDestroy:
+                    description: |-
+                      (Boolean) A boolean that indicates that the index should be deleted even if it contains documents.
+                      A boolean that indicates that the index should be deleted even if it contains documents.
+                    type: boolean
+                  gcDeletes:
+                    description: |-
+                      (String) The length of time that a deleted document's version number remains available for further versioned operations.
+                      The length of time that a deleted document's version number remains available for further versioned operations.
+                    type: string
+                  highlightMaxAnalyzedOffset:
+                    description: |-
+                      (String) The maximum number of characters that will be analyzed for a highlight request. A stringified number.
+                      The maximum number of characters that will be analyzed for a highlight request. A stringified number.
+                    type: string
+                  id:
+                    description: (String) The ID of this resource.
+                    type: string
+                  includeTypeName:
+                    description: |-
+                      (String) A string that indicates if and what we should pass to include_type_name parameter. Set to "false" when trying to create an index on a v6 cluster without a doc type or set to "true" when trying to create an index on a v7 cluster with a doc type. Since mapping updates are not currently supported, this applies only on index create.
+                      A string that indicates if and what we should pass to include_type_name parameter. Set to `"false"` when trying to create an index on a v6 cluster without a doc type or set to `"true"` when trying to create an index on a v7 cluster with a doc type. Since mapping updates are not currently supported, this applies only on index create.
+                    type: string
+                  indexKnn:
+                    description: |-
+                      NN search functionality will be disabled.
+                      Indicates whether the index should build native library indices for the knn_vector fields. If set to false, the knn_vector fields will be stored in doc values, but Approximate k-NN search functionality will be disabled.
+                    type: boolean
+                  indexKnnAlgoParamEfSearch:
+                    description: |-
+                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib implementation.
+                      The size of the dynamic list used during k-NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
+                    type: string
+                  indexSimilarityDefault:
+                    description: |-
+                      (String) A JSON string describing the default index similarity config.
+                      A JSON string describing the default index similarity config.
+                    type: string
+                  indexingSlowlogLevel:
+                    description: |-
+                      (String) Set which logging level to use for the search slow log, can be: warn, info, debug, trace
+                      Set which logging level to use for the search slow log, can be: `warn`, `info`, `debug`, `trace`
+                    type: string
+                  indexingSlowlogSource:
+                    description: |-
+                      (String) Set the number of characters of the _source to include in the slowlog lines, false or 0 will skip logging the source entirely and setting it to true will log the entire source regardless of size. The original _source is reformatted by default to make sure that it fits on a single log line.
+                      Set the number of characters of the `_source` to include in the slowlog lines, `false` or `0` will skip logging the source entirely and setting it to `true` will log the entire source regardless of size. The original `_source` is reformatted by default to make sure that it fits on a single log line.
+                    type: string
+                  indexingSlowlogThresholdIndexDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `2s`
+                    type: string
+                  indexingSlowlogThresholdIndexInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `5s`
+                    type: string
+                  indexingSlowlogThresholdIndexTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `500ms`
+                    type: string
+                  indexingSlowlogThresholdIndexWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches for indexing queries, in time units, e.g. `10s`
+                    type: string
+                  loadFixedBitsetFiltersEagerly:
+                    description: |-
+                      loaded for nested queries. This can be set only on creation.
+                      Indicates whether cached filters are pre-loaded for nested queries. This can be set only on creation.
+                    type: boolean
+                  mappings:
+                    description: |-
+                      (String) A JSON string defining how documents in the index, and the fields they contain, are stored and indexed. To avoid the complexities of field mapping updates, updates of this field are not allowed via this provider.
+                      A JSON string defining how documents in the index, and the fields they contain, are stored and indexed. To avoid the complexities of field mapping updates, updates of this field are not allowed via this provider.
+                    type: string
+                  maxDocvalueFieldsSearch:
+                    description: |-
+                      (String) The maximum number of docvalue_fields that are allowed in a query. A stringified number.
+                      The maximum number of `docvalue_fields` that are allowed in a query. A stringified number.
+                    type: string
+                  maxInnerResultWindow:
+                    description: |-
+                      (String) The maximum value of from + size for inner hits definition and top hits aggregations to this index. A stringified number.
+                      The maximum value of `from + size` for inner hits definition and top hits aggregations to this index. A stringified number.
+                    type: string
+                  maxNgramDiff:
+                    description: |-
+                      (String) The maximum allowed difference between min_gram and max_gram for NGramTokenizer and NGramTokenFilter. A stringified number.
+                      The maximum allowed difference between min_gram and max_gram for NGramTokenizer and NGramTokenFilter. A stringified number.
+                    type: string
+                  maxRefreshListeners:
+                    description: |-
+                      (String) Maximum number of refresh listeners available on each shard of the index. A stringified number.
+                      Maximum number of refresh listeners available on each shard of the index. A stringified number.
+                    type: string
+                  maxRegexLength:
+                    description: |-
+                      (String) The maximum length of regex that can be used in Regexp Query. A stringified number.
+                      The maximum length of regex that can be used in Regexp Query. A stringified number.
+                    type: string
+                  maxRescoreWindow:
+                    description: |-
+                      (String) The maximum value of window_size for rescore requests in searches of this index. A stringified number.
+                      The maximum value of `window_size` for `rescore` requests in searches of this index. A stringified number.
+                    type: string
+                  maxResultWindow:
+                    description: |-
+                      (String) The maximum value of from + size for searches to this index. A stringified number.
+                      The maximum value of `from + size` for searches to this index. A stringified number.
+                    type: string
+                  maxScriptFields:
+                    description: |-
+                      (String) The maximum number of script_fields that are allowed in a query. A stringified number.
+                      The maximum number of `script_fields` that are allowed in a query. A stringified number.
+                    type: string
+                  maxShingleDiff:
+                    description: |-
+                      (String) The maximum allowed difference between max_shingle_size and min_shingle_size for ShingleTokenFilter. A stringified number.
+                      The maximum allowed difference between max_shingle_size and min_shingle_size for ShingleTokenFilter. A stringified number.
+                    type: string
+                  maxTermsCount:
+                    description: |-
+                      (String) The maximum number of terms that can be used in Terms Query. A stringified number.
+                      The maximum number of terms that can be used in Terms Query. A stringified number.
+                    type: string
+                  name:
+                    description: |-
+                      (String) Name of the index to create
+                      Name of the index to create
+                    type: string
+                  numberOfReplicas:
+                    description: |-
+                      (String) Number of shard replicas. A stringified number.
+                      Number of shard replicas. A stringified number.
+                    type: string
+                  numberOfRoutingShards:
+                    description: |-
+                      (String) Value used with number_of_shards to route documents to a primary shard. A stringified number. This can be set only on creation.
+                      Value used with number_of_shards to route documents to a primary shard. A stringified number. This can be set only on creation.
+                    type: string
+                  numberOfShards:
+                    description: |-
+                      (String) Number of shards for the index. This can be set only on creation.
+                      Number of shards for the index. This can be set only on creation.
+                    type: string
+                  refreshInterval:
+                    description: |-
+                      1 to disable refresh.
+                      How often to perform a refresh operation, which makes recent changes to the index visible to search. Can be set to `-1` to disable refresh.
+                    type: string
+                  rolloverAlias:
+                    description: (String)
+                    type: string
+                  routingAllocationEnable:
+                    description: |-
+                      (String) Controls shard allocation for this index. It can be set to: all , primaries , new_primaries , none.
+                      Controls shard allocation for this index. It can be set to: `all` , `primaries` , `new_primaries` , `none`.
+                    type: string
+                  routingPartitionSize:
+                    description: |-
+                      (String) The number of shards a custom routing value can go to. A stringified number. This can be set only on creation.
+                      The number of shards a custom routing value can go to. A stringified number. This can be set only on creation.
+                    type: string
+                  routingRebalanceEnable:
+                    description: |-
+                      (String) Enables shard rebalancing for this index. It can be set to: all, primaries , replicas , none.
+                      Enables shard rebalancing for this index. It can be set to: `all`, `primaries` , `replicas` , `none`.
+                    type: string
+                  searchIdleAfter:
+                    description: |-
+                      (String) How long a shard can not receive a search or get request until it’s considered search idle.
+                      How long a shard can not receive a search or get request until it’s considered search idle.
+                    type: string
+                  searchSlowlogLevel:
+                    description: |-
+                      (String) Set which logging level to use for the search slow log, can be: warn, info, debug, trace
+                      Set which logging level to use for the search slow log, can be: `warn`, `info`, `debug`, `trace`
+                    type: string
+                  searchSlowlogThresholdFetchDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `2s`
+                    type: string
+                  searchSlowlogThresholdFetchInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `5s`
+                    type: string
+                  searchSlowlogThresholdFetchTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `500ms`
+                    type: string
+                  searchSlowlogThresholdFetchWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches in the fetch phase, in time units, e.g. `10s`
+                    type: string
+                  searchSlowlogThresholdQueryDebug:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 2s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `2s`
+                    type: string
+                  searchSlowlogThresholdQueryInfo:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 5s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `5s`
+                    type: string
+                  searchSlowlogThresholdQueryTrace:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 500ms
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `500ms`
+                    type: string
+                  searchSlowlogThresholdQueryWarn:
+                    description: |-
+                      (String) Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. 10s
+                      Set the cutoff for shard level slow search logging of slow searches in the query phase, in time units, e.g. `10s`
+                    type: string
+                  shardCheckOnStartup:
+                    description: |-
+                      (String) Whether or not shards should be checked for corruption before opening. When corruption is detected, it will prevent the shard from being opened. Accepts false, true, checksum.
+                      Whether or not shards should be checked for corruption before opening. When corruption is detected, it will prevent the shard from being opened. Accepts `false`, `true`, `checksum`.
+                    type: string
+                  sortField:
+                    description: |-
+                      (String) The field to sort shards in this index by.
+                      The field to sort shards in this index by.
+                    type: string
+                  sortOrder:
+                    description: |-
+                      (String) The direction to sort shards in. Accepts asc, desc.
+                      The direction to sort shards in. Accepts `asc`, `desc`.
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

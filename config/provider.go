@@ -5,6 +5,7 @@ import (
 	_ "embed"
 
 	ujconfig "github.com/crossplane/upjet/pkg/config"
+	"github.com/tagesjump/provider-opensearch/config/roles"
 )
 
 const (
@@ -29,7 +30,7 @@ func GetProvider() *ujconfig.Provider {
 		))
 
 	for _, configure := range []func(provider *ujconfig.Provider){
-		// add custom config functions
+		roles.Configure,
 	} {
 		configure(pc)
 	}

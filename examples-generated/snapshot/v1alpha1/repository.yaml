@@ -1,0 +1,16 @@
+apiVersion: snapshot.opensearch.upbound.io/v1alpha1
+kind: Repository
+metadata:
+  annotations:
+    meta.upbound.io/example-id: snapshot/v1alpha1/repository
+  labels:
+    testing.upbound.io/example-name: repo
+  name: repo
+spec:
+  forProvider:
+    name: es-index-backups
+    settings:
+      bucket: es-index-backups
+      region: us-east-1
+      role_arn: arn:aws:iam::123456789012:role/MyRole
+    type: s3

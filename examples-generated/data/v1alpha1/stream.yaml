@@ -1,0 +1,30 @@
+apiVersion: data.opensearch.upbound.io/v1alpha1
+kind: Stream
+metadata:
+  annotations:
+    meta.upbound.io/example-id: data/v1alpha1/stream
+  labels:
+    testing.upbound.io/example-name: foo
+  name: foo
+spec:
+  forProvider:
+    name: foo-data-stream
+
+---
+
+apiVersion: composable.opensearch.upbound.io/v1alpha1
+kind: IndexTemplate
+metadata:
+  annotations:
+    meta.upbound.io/example-id: data/v1alpha1/stream
+  labels:
+    testing.upbound.io/example-name: foo
+  name: foo
+spec:
+  forProvider:
+    body: |
+      {
+        "index_patterns": ["foo-data-stream*"],
+        "data_stream": {}
+      }
+    name: foo-template

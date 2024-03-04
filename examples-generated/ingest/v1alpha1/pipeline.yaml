@@ -1,0 +1,24 @@
+apiVersion: ingest.opensearch.upbound.io/v1alpha1
+kind: Pipeline
+metadata:
+  annotations:
+    meta.upbound.io/example-id: ingest/v1alpha1/pipeline
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+spec:
+  forProvider:
+    body: |
+      {
+        "description" : "describe pipeline",
+        "version": 123,
+        "processors" : [
+          {
+            "set" : {
+              "field": "foo",
+              "value": "bar"
+            }
+          }
+        ]
+      }
+    name: terraform-test

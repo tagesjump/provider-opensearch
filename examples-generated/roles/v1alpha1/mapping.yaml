@@ -1,0 +1,17 @@
+apiVersion: roles.opensearch.upbound.io/v1alpha1
+kind: Mapping
+metadata:
+  annotations:
+    meta.upbound.io/example-id: roles/v1alpha1/mapping
+  labels:
+    testing.upbound.io/example-name: mapper
+  name: mapper
+spec:
+  forProvider:
+    backendRoles:
+    - arn:aws:iam::123456789012:role/lambda-call-opensearch
+    - arn:aws:iam::123456789012:role/run-containers
+    description: Mapping AWS IAM roles to ES role
+    roleNameSelector:
+      matchLabels:
+        testing.upbound.io/example-name: example

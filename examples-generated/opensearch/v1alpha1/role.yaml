@@ -1,0 +1,24 @@
+apiVersion: opensearch.opensearch.upbound.io/v1alpha1
+kind: Role
+metadata:
+  annotations:
+    meta.upbound.io/example-id: opensearch/v1alpha1/role
+  labels:
+    testing.upbound.io/example-name: writer
+  name: writer
+spec:
+  forProvider:
+    clusterPermissions:
+    - '*'
+    description: Logs writer role
+    indexPermissions:
+    - allowedActions:
+      - write
+      indexPatterns:
+      - logstash-*
+    roleName: logs_writer
+    tenantPermissions:
+    - allowedActions:
+      - write
+      tenantPatterns:
+      - logstash-*

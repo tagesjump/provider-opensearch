@@ -1,0 +1,13 @@
+apiVersion: ism.opensearch.upbound.io/v1alpha1
+kind: PolicyMapping
+metadata:
+  annotations:
+    meta.upbound.io/example-id: ism/v1alpha1/policymapping
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+spec:
+  forProvider:
+    indexes: test_index
+    policyId: policy_1
+    state: delete

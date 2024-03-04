@@ -1,0 +1,70 @@
+apiVersion: sm.opensearch.upbound.io/v1alpha1
+kind: Policy
+metadata:
+  annotations:
+    meta.upbound.io/example-id: sm/v1alpha1/policy
+  labels:
+    testing.upbound.io/example-name: snapshot_to_s3
+  name: snapshot-to-s3
+spec:
+  forProvider:
+    body: |-
+      ${jsonencode({
+          "enabled"     = true
+          "description" = "My snapshot policy"
+
+          "creation" = {
+            "schedule" = {
+              "cron" = {
+                "expression" = "0 0 * * *"
+                "timezone"   = "UTC"
+              }
+            }
+
+            "time_limit" = "1h"
+          }
+
+          "deletion" = {
+            "schedule" = {
+              "cron" = {
+                "expression" = "0 0 * * *"
+                "timezone"   = "UTC"
+              }
+            }
+
+            "condition" = {
+              "max_age"   = "14d"
+              "max_count" = 400
+              "min_count" = 1
+            }
+
+            "time_limit" = "1h"
+          }
+
+          "snapshot_config" = {
+            "timezone"   = "UTC"
+            "indices"    = "*"
+            "repository" = opensearch_snapshot_repository.repo.name
+          }
+        })}
+    policyName: snapshot_to_s3
+
+---
+
+apiVersion: snapshot.opensearch.upbound.io/v1alpha1
+kind: Repository
+metadata:
+  annotations:
+    meta.upbound.io/example-id: sm/v1alpha1/policy
+  labels:
+    testing.upbound.io/example-name: repo
+  name: repo
+spec:
+  forProvider:
+    name: os-index-backups
+    settings:
+      bucket: ${module.s3_snapshot.s3_bucket_id}
+      region: ${module.s3_snapshot.s3_bucket_region}
+      role_arn: ${aws_iam_role.snapshot_create.arn}
+      server_side_encryption: true
+    type: s3
