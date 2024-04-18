@@ -19,11 +19,11 @@ spec:
   scope: Cluster
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.conditions[?(@.type=='Ready')].status
-      name: READY
-      type: string
     - jsonPath: .status.conditions[?(@.type=='Synced')].status
       name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
       type: string
     - jsonPath: .metadata.annotations.crossplane\.io/external-name
       name: EXTERNAL-NAME
@@ -175,7 +175,7 @@ spec:
                     type: boolean
                   indexKnnAlgoParamEfSearch:
                     description: |-
-                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib implementation.
+                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
                       The size of the dynamic list used during k-NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
                     type: string
                   indexSimilarityDefault:
@@ -497,7 +497,7 @@ spec:
                     type: boolean
                   indexKnnAlgoParamEfSearch:
                     description: |-
-                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib implementation.
+                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
                       The size of the dynamic list used during k-NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
                     type: string
                   indexSimilarityDefault:
@@ -986,7 +986,7 @@ spec:
                     type: boolean
                   indexKnnAlgoParamEfSearch:
                     description: |-
-                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib implementation.
+                      NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
                       The size of the dynamic list used during k-NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
                     type: string
                   indexSimilarityDefault:

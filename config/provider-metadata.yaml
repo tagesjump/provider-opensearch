@@ -12,23 +12,23 @@ resources:
             aws_profile: (String) The AWS profile for use with AWS OpenSearch Service domains
             aws_region: (String) The AWS region for use in signing of AWS OpenSearch requests. Must be specified in order to use AWS URL signing with AWS OpenSearch endpoint exposed on a custom DNS domain.
             aws_secret_key: (String) The secret key for use with AWS OpenSearch Service domains
-            aws_signature_service: (String) AWS service name used in the credential scope of signed requests to opensearch.
+            aws_signature_service: (String) AWS service name used in the credential scope of signed requests to OpenSearch.
             aws_token: (String) The session token for use with AWS OpenSearch Service domains
             cacert_file: (String) A Custom CA certificate
-            client_cert_path: (String) A X509 certificate to connect to opensearch
-            client_key_path: (String) A X509 key to connect to opensearch
-            healthcheck: (Boolean) Set the client healthcheck option for the opensearch client. Healthchecking is designed for direct access to the cluster.
-            host_override: (String) If provided, sets the 'Host' header of requests and the 'ServerName' for certificate validation to this value. See the documentation on connecting to opensearch via an SSH tunnel.
+            client_cert_path: (String) A X509 certificate to connect to OpenSearch
+            client_key_path: (String) A X509 key to connect to OpenSearch
+            healthcheck: (Boolean) Set the client healthcheck option for the OpenSearch client. Healthchecking is designed for direct access to the cluster.
+            host_override: (String) If provided, sets the 'Host' header of requests and the 'ServerName' for certificate validation to this value. See the documentation on connecting to OpenSearch via an SSH tunnel.
             insecure: (Boolean) Disable SSL verification of API calls
-            opensearch_version: (String) opensearch Version
-            password: (String) Password to use to connect to opensearch using basic auth
-            proxy: (String) Proxy URL to use for requests to opensearch.
-            sign_aws_requests: (Boolean) Enable signing of AWS opensearch requests. The url must refer to AWS ES domain (*.<region>.es.amazonaws.com), or aws_region must be specified explicitly.
-            sniff: (Boolean) Set the node sniffing option for the opensearch client. Client won't work with sniffing if nodes are not routable.
+            opensearch_version: (String) OpenSearch Version
+            password: (String) Password to use to connect to OpenSearch using basic auth
+            proxy: (String) Proxy URL to use for requests to OpenSearch.
+            sign_aws_requests: (Boolean) Enable signing of AWS OpenSearch requests. The url must refer to AWS ES domain (*.<region>.es.amazonaws.com), or aws_region must be specified explicitly.
+            sniff: (Boolean) Set the node sniffing option for the OpenSearch client. Client won't work with sniffing if nodes are not routable.
             token: (String) A bearer token or ApiKey for an Authorization header, e.g. Active Directory API key.
             token_name: (String) The type of token, usually ApiKey or Bearer
             url: (String) OpenSearch URL
-            username: (String) Username to use to connect to opensearch using basic auth
+            username: (String) Username to use to connect to OpenSearch using basic auth
             version_ping_timeout: (Number) Version ping timeout in seconds
         importStatements:
             - |-
@@ -153,15 +153,22 @@ resources:
             - |-
               # Import by name
               terraform import opensearch_audit_config.test_config my-config
-    opensearch_channel_configuration Resource - terraform-provider-opensearch:
+    opensearch_channel_configuration:
         subCategory: ""
         description: Provides an OpenSearch channel configuration. Please refer to the OpenSearch channel configuration documentation for details.
-        name: opensearch_channel_configuration Resource - terraform-provider-opensearch
+        name: opensearch_channel_configuration
         title: opensearch_channel_configuration Resource - terraform-provider-opensearch
+        examples:
+            - name: configuration_1
+              manifest: |-
+                {
+                  "body": "{\n  \"config_id\": \"configuration_1\",\n  \"config\": {\n    \"name\": \"name\",\n    \"description\" : \"description\",\n    \"config_type\" : \"slack\",\n    \"is_enabled\" : true,\n    \"slack\": {\n      \"url\": \"https://sample-slack-webhook\"\n    }\n  }\n}\n"
+                }
         argumentDocs:
             body: (String) The channel configuration document
             id: (String) The ID of this resource.
-        importStatements: []
+        importStatements:
+            - terraform import opensearch_channel_configuration.configuration_1 configuration_1
     opensearch_cluster_settings:
         subCategory: ""
         description: Manages a cluster's (persistent) settings.
@@ -225,7 +232,7 @@ resources:
             - name: test
               manifest: |-
                 {
-                  "body": "{\n  \"template\": {\n    \"settings\": {\n      \"index\": {\n        \"number_of_shards\": 1\n      }\n    },\n    \"mappings\": {\n      \"properties\": {\n        \"host_name\": {\n          \"type\": \"keyword\"\n        },\n        \"created_at\": {\n          \"type\": \"date\",\n          \"format\": \"EEE MMM dd HH:mm:ss Z yyyy\"\n        }\n      }\n    },\n    \"aliases\": {\n      \"mydata\": { }\n    }\n  }\n}\n",
+                  "body": "{\n  \"template\": {\n    \"settings\": {\n      \"index\": {\n        \"number_of_shards\": \"1\"\n      }\n    },\n    \"mappings\": {\n      \"properties\": {\n        \"host_name\": {\n          \"type\": \"keyword\"\n        },\n        \"created_at\": {\n          \"type\": \"date\",\n          \"format\": \"EEE MMM dd HH:mm:ss Z yyyy\"\n        }\n      }\n    },\n    \"aliases\": {\n      \"mydata\": { }\n    }\n  }\n}\n",
                   "name": "terraform-test"
                 }
         argumentDocs:
@@ -245,7 +252,7 @@ resources:
             - name: template_1
               manifest: |-
                 {
-                  "body": "{\n  \"index_patterns\": [\"te*\", \"bar*\"],\n  \"template\": {\n    \"settings\": {\n      \"index\": {\n        \"number_of_shards\": 1\n      }\n    },\n    \"mappings\": {\n      \"properties\": {\n        \"host_name\": {\n          \"type\": \"keyword\"\n        },\n        \"created_at\": {\n          \"type\": \"date\",\n          \"format\": \"EEE MMM dd HH:mm:ss Z yyyy\"\n        }\n      }\n    },\n    \"aliases\": {\n      \"mydata\": { }\n    }\n  },\n  \"priority\": 200,\n  \"version\": 3\n}\n",
+                  "body": "{\n  \"index_patterns\": [\"te*\", \"bar*\"],\n  \"template\": {\n    \"settings\": {\n      \"index\": {\n        \"number_of_shards\": \"1\"\n      }\n    },\n    \"mappings\": {\n      \"properties\": {\n        \"host_name\": {\n          \"type\": \"keyword\"\n        },\n        \"created_at\": {\n          \"type\": \"date\",\n          \"format\": \"EEE MMM dd HH:mm:ss Z yyyy\"\n        }\n      }\n    },\n    \"aliases\": {\n      \"mydata\": { }\n    }\n  },\n  \"priority\": 200,\n  \"version\": 3\n}\n",
                   "name": "template_1"
                 }
         argumentDocs:
@@ -344,13 +351,13 @@ resources:
         name: opensearch_index
         title: opensearch_index Resource - terraform-provider-opensearch
         examples:
-            - name: test
+            - name: test-simple-index
               manifest: |-
                 {
-                  "mappings": "{\n  \"people\": {\n    \"_all\": {\n      \"enabled\": false\n    },\n    \"properties\": {\n      \"email\": {\n        \"type\": \"text\"\n      }\n    }\n  }\n}\n",
+                  "mappings": "{\n  \"properties\": {\n    \"name\": {\n      \"type\": \"text\"\n    }\n  }\n}\n",
                   "name": "terraform-test",
-                  "number_of_replicas": 1,
-                  "number_of_shards": 1
+                  "number_of_replicas": "1",
+                  "number_of_shards": "1"
                 }
         argumentDocs:
             aliases: (String) A JSON string describing a set of aliases. The index aliases API allows aliasing an index with a name, with all APIs automatically converting the alias name to the actual index name. An alias can also be mapped to more than one index, and when specifying it, the alias will automatically expand to the aliased indices.
@@ -374,7 +381,7 @@ resources:
             id: (String) The ID of this resource.
             include_type_name: (String) A string that indicates if and what we should pass to include_type_name parameter. Set to "false" when trying to create an index on a v6 cluster without a doc type or set to "true" when trying to create an index on a v7 cluster with a doc type. Since mapping updates are not currently supported, this applies only on index create.
             index_knn: (Boolean) Indicates whether the index should build native library indices for the knn_vector fields. If set to false, the knn_vector fields will be stored in doc values, but Approximate k-NN search functionality will be disabled.
-            index_knn_algo_param_ef_search: (String) The size of the dynamic list used during k-NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib implementation.
+            index_knn_algo_param_ef_search: (String) The size of the dynamic list used during k-NN searches. Higher values lead to more accurate but slower searches. Only available for nmslib.
             index_similarity_default: (String) A JSON string describing the default index similarity config.
             indexing_slowlog_level: '(String) Set which logging level to use for the search slow log, can be: warn, info, debug, trace'
             indexing_slowlog_source: (String) Set the number of characters of the _source to include in the slowlog lines, false or 0 will skip logging the source entirely and setting it to true will log the entire source regardless of size. The original _source is reformatted by default to make sure that it fits on a single log line.
@@ -429,7 +436,7 @@ resources:
             - name: template_1
               manifest: |-
                 {
-                  "body": "{\n  \"template\": \"te*\",\n  \"settings\": {\n    \"number_of_shards\": 1\n  },\n  \"mappings\": {\n    \"type1\": {\n      \"_source\": {\n        \"enabled\": false\n      },\n      \"properties\": {\n        \"host_name\": {\n          \"type\": \"keyword\"\n        },\n        \"created_at\": {\n          \"type\": \"date\",\n          \"format\": \"EEE MMM dd HH:mm:ss Z YYYY\"\n        }\n      }\n    }\n  }\n}\n",
+                  "body": "{\n  \"index_patterns\": [\n    \"logs-2020-01-*\"\n  ],\n  \"template\": {\n    \"aliases\": {\n      \"my_logs\": {}\n    },\n    \"settings\": {\n      \"index\": {\n        \"number_of_shards\": \"2\",\n        \"number_of_replicas\": \"1\"\n      }\n    },\n    \"mappings\": {\n      \"properties\": {\n        \"timestamp\": {\n          \"type\": \"date\",\n          \"format\": \"yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n        },\n        \"value\": {\n          \"type\": \"double\"\n        }\n      }\n    }\n  }\n}\n",
                   "name": "template_1"
                 }
         argumentDocs:
@@ -478,7 +485,7 @@ resources:
             - terraform import opensearch_ism_policy.cleanup delete_after_15d
     opensearch_ism_policy_mapping:
         subCategory: ""
-        description: Provides an OpenSearch Index State Management (ISM) policy. Please refer to the OpenSearch ISM documentation for details.
+        description: Provides an OpenSearch Index State Management (ISM) policy. Please refer to the OpenSearch ISM documentation for details. !> opensearch_ism_policy_mapping is deprecated in OpenSearch 1.x please use the opensearch_ism_policy resource and specify the ism_template attribute in the policies instead.
         name: opensearch_ism_policy_mapping
         title: opensearch_ism_policy_mapping Resource - terraform-provider-opensearch
         examples:
@@ -513,7 +520,7 @@ resources:
             - name: movies_last_hour
               manifest: |-
                 {
-                  "body": "{\n  \"name\": \"test-monitor\",\n  \"type\": \"monitor\",\n  \"enabled\": true,\n  \"schedule\": {\n    \"period\": {\n      \"interval\": 1,\n      \"unit\": \"MINUTES\"\n    }\n  },\n  \"inputs\": [{\n    \"search\": {\n      \"indices\": [\"movies\"],\n      \"query\": {\n        \"size\": 0,\n        \"aggregations\": {},\n        \"query\": {\n          \"bool\": {\n            \"adjust_pure_negative\":true,\n            \"boost\":1,\n            \"filter\": [{\n              \"range\": {\n                \"@timestamp\": {\n                  \"boost\":1,\n                  \"from\":\"||-1h\",\n                  \"to\":\"\",\n                  \"include_lower\":true,\n                  \"include_upper\":true,\n                  \"format\": \"epoch_millis\"\n                }\n              }\n            }]\n          }\n        }\n      }\n    }\n  }],\n  \"triggers\": [\n    {\n      \"name\" : \"Errors\",\n      \"severity\" : \"1\",\n      \"condition\" : {\n        \"script\" : {\n          \"source\" : \"ctx.results[0].hits.total.value \u003e 0\",\n          \"lang\" : \"painless\"\n        }\n      },\n      \"actions\" : [\n        {\n          \"name\" : \"Slack\",\n          \"destination_id\" : \"${opensearch_destination.slack_on_call_channel.id}\",\n          \"message_template\" : {\n            \"source\" : \"bogus\",\n            \"lang\" : \"mustache\"\n          },\n          \"throttle_enabled\" : false,\n          \"subject_template\" : {\n            \"source\" : \"Production Errors\",\n            \"lang\" : \"mustache\"\n          }\n        }\n      ]\n    }\n  ]\n}\n"
+                  "body": "{\n  \"name\": \"test-monitor\",\n  \"type\": \"monitor\",\n  \"enabled\": true,\n  \"schedule\": {\n    \"period\": {\n      \"interval\": 1,\n      \"unit\": \"MINUTES\"\n    }\n  },\n  \"inputs\": [{\n    \"search\": {\n      \"indices\": [\"movies\"],\n      \"query\": {\n        \"size\": 0,\n        \"aggregations\": {},\n        \"query\": {\n          \"bool\": {\n            \"adjust_pure_negative\":true,\n            \"boost\":1,\n            \"filter\": [{\n              \"range\": {\n                \"@timestamp\": {\n                  \"boost\":1,\n                  \"from\":\"||-1h\",\n                  \"to\":\"\",\n                  \"include_lower\":true,\n                  \"include_upper\":true,\n                  \"format\": \"epoch_millis\"\n                }\n              }\n            }]\n          }\n        }\n      }\n    }\n  }],\n  \"triggers\": [\n    {\n      \"name\" : \"Errors\",\n      \"severity\" : \"1\",\n      \"condition\" : {\n        \"script\" : {\n          \"source\" : \"ctx.results[0].hits.total.value \u003e 0\",\n          \"lang\" : \"painless\"\n        }\n      },\n      \"actions\" : [\n        {\n          \"name\" : \"Slack\",\n          \"destination_id\" : \"${opensearch_channel_configuration.slack_on_call_channel.id}\",\n          \"message_template\" : {\n            \"source\" : \"bogus\",\n            \"lang\" : \"mustache\"\n          },\n          \"throttle_enabled\" : false,\n          \"subject_template\" : {\n            \"source\" : \"Production Errors\",\n            \"lang\" : \"mustache\"\n          }\n        }\n      ]\n    }\n  ]\n}\n"
                 }
         argumentDocs:
             body: (String) The monitor document

@@ -8,7 +8,7 @@ metadata:
     meta.crossplane.io/license: Apache-2.0
     meta.crossplane.io/description: |
       The OpenSearch Crossplane provider adds support for
-      managing YC resources in Kubernetes.
+      managing OpenSearch resources in Kubernetes.
 
     meta.crossplane.io/readme: |
       `provider-opensearch`is the Crossplane infrastructure provider for [OpenSearch](https://opensearch.org/).
