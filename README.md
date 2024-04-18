@@ -10,7 +10,7 @@ OpenSearch API.
 Install the provider by using the following command after changing the image tag
 to the [latest release](https://marketplace.upbound.io/providers/tages/provider-opensearch):
 ```
-up ctp provider install xpkg.upbound.io/tages/provider-opensearch:v0.1.0
+up ctp provider install xpkg.upbound.io/tages/provider-opensearch:v0.2.0
 ```
 
 Alternatively, you can use declarative installation:
@@ -21,7 +21,7 @@ kind: Provider
 metadata:
   name: provider-opensearch
 spec:
-  package: xpkg.upbound.io/tages/provider-opensearch:v0.1.0
+  package: xpkg.upbound.io/tages/provider-opensearch:v0.2.0
 EOF
 ```
 
