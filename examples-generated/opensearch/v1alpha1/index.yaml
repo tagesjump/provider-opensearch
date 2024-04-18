@@ -4,23 +4,18 @@ metadata:
   annotations:
     meta.upbound.io/example-id: opensearch/v1alpha1/index
   labels:
-    testing.upbound.io/example-name: test
-  name: test
+    testing.upbound.io/example-name: test-simple-index
+  name: test-simple-index
 spec:
   forProvider:
     mappings: |
       {
-        "people": {
-          "_all": {
-            "enabled": false
-          },
-          "properties": {
-            "email": {
-              "type": "text"
-            }
+        "properties": {
+          "name": {
+            "type": "text"
           }
         }
       }
     name: terraform-test
-    numberOfReplicas: 1
-    numberOfShards: 1
+    numberOfReplicas: "1"
+    numberOfShards: "1"

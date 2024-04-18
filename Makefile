@@ -8,7 +8,7 @@ export TERRAFORM_VERSION ?= 1.6.1
 
 export TERRAFORM_PROVIDER_SOURCE ?= opensearch-project/opensearch
 export TERRAFORM_PROVIDER_REPO ?= https://github.com/opensearch-project/terraform-provider-opensearch
-export TERRAFORM_PROVIDER_VERSION ?= 2.2.0
+export TERRAFORM_PROVIDER_VERSION ?= 2.2.1
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-opensearch
 export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/opensearch-project/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
 export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-opensearch_$(TERRAFORM_PROVIDER_VERSION)

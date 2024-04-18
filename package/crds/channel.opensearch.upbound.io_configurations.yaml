@@ -19,11 +19,11 @@ spec:
   scope: Cluster
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.conditions[?(@.type=='Ready')].status
-      name: READY
-      type: string
     - jsonPath: .status.conditions[?(@.type=='Synced')].status
       name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
       type: string
     - jsonPath: .metadata.annotations.crossplane\.io/external-name
       name: EXTERNAL-NAME
@@ -34,7 +34,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Configuration is the Schema for the Configurations API. <no value>
+        description: Configuration is the Schema for the Configurations API. Provides
+          an OpenSearch channel configuration. Please refer to the OpenSearch channel
+          configuration documentation for details.
         properties:
           apiVersion:
             description: |-
@@ -73,7 +75,9 @@ spec:
               forProvider:
                 properties:
                   body:
-                    description: The channel configuration document
+                    description: |-
+                      (String) The channel configuration document
+                      The channel configuration document
                     type: string
                 type: object
               initProvider:
@@ -90,7 +94,9 @@ spec:
                   autoscaler.
                 properties:
                   body:
-                    description: The channel configuration document
+                    description: |-
+                      (String) The channel configuration document
+                      The channel configuration document
                     type: string
                 type: object
               managementPolicies:
@@ -271,9 +277,12 @@ spec:
               atProvider:
                 properties:
                   body:
-                    description: The channel configuration document
+                    description: |-
+                      (String) The channel configuration document
+                      The channel configuration document
                     type: string
                   id:
+                    description: (String) The ID of this resource.
                     type: string
                 type: object
               conditions:

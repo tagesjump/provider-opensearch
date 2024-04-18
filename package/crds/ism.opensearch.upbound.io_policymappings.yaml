@@ -19,11 +19,11 @@ spec:
   scope: Cluster
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.conditions[?(@.type=='Ready')].status
-      name: READY
-      type: string
     - jsonPath: .status.conditions[?(@.type=='Synced')].status
       name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
       type: string
     - jsonPath: .metadata.annotations.crossplane\.io/external-name
       name: EXTERNAL-NAME
@@ -36,7 +36,9 @@ spec:
       openAPIV3Schema:
         description: PolicyMapping is the Schema for the PolicyMappings API. Provides
           an OpenSearch Index State Management (ISM) policy. Please refer to the OpenSearch
-          ISM documentation for details.
+          ISM documentation for details. !> opensearch_ism_policy_mapping is deprecated
+          in OpenSearch 1.x please use the opensearch_ism_policy resource and specify
+          the ism_template attribute in the policies instead.
         properties:
           apiVersion:
             description: |-
