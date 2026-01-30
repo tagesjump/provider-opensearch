@@ -1,0 +1,55 @@
+apiVersion: audit.opensearch.m.upbound.io/v1alpha1
+kind: Config
+metadata:
+  annotations:
+    meta.upbound.io/example-id: audit/v1alpha1/config
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+  namespace: upbound-system
+spec:
+  forProvider:
+    audit:
+    - disabledRestCategories:
+      - GRANTED_PRIVILEGES
+      - AUTHENTICATED
+      disabledTransportCategories:
+      - GRANTED_PRIVILEGES
+      - AUTHENTICATED
+      enableRest: true
+      enableTransport: true
+      excludeSensitiveHeaders: true
+      ignoreRequests:
+      - SearchRequest
+      - indices:data/read/*
+      - /_cluster/health
+      ignoreUsers:
+      - dashboardserver
+      logRequestBody: true
+      resolveBulkRequests: true
+      resolveIndices: true
+    compliance:
+    - enabled: true
+      externalConfig: false
+      internalConfig: true
+      readIgnoreUsers:
+      - read-ignore-1
+      readMetadataOnly: true
+      readWatchedField:
+      - fields:
+        - field-1
+        - field-2
+        index: read-index-1
+      - fields:
+        - field-3
+        index: read-index-2
+      writeIgnoreUsers:
+      - write-ignore-1
+      writeLogDiffs: false
+      writeMetadataOnly: true
+      writeWatchedIndices:
+      - write-index-1
+      - write-index-2
+      - log-*
+      - '*'
+    enabled: true

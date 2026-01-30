@@ -1,0 +1,36 @@
+apiVersion: component.opensearch.m.upbound.io/v1alpha1
+kind: Template
+metadata:
+  annotations:
+    meta.upbound.io/example-id: component/v1alpha1/template
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+  namespace: upbound-system
+spec:
+  forProvider:
+    body: |
+      {
+        "template": {
+          "settings": {
+            "index": {
+              "number_of_shards": "1"
+            }
+          },
+          "mappings": {
+            "properties": {
+              "host_name": {
+                "type": "keyword"
+              },
+              "created_at": {
+                "type": "date",
+                "format": "EEE MMM dd HH:mm:ss Z yyyy"
+              }
+            }
+          },
+          "aliases": {
+            "mydata": { }
+          }
+        }
+      }
+    name: terraform-test

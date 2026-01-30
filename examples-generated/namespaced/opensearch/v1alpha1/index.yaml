@@ -1,0 +1,22 @@
+apiVersion: opensearch.opensearch.m.upbound.io/v1alpha1
+kind: Index
+metadata:
+  annotations:
+    meta.upbound.io/example-id: opensearch/v1alpha1/index
+  labels:
+    testing.upbound.io/example-name: test-simple-index
+  name: test-simple-index
+  namespace: upbound-system
+spec:
+  forProvider:
+    mappings: |
+      {
+        "properties": {
+          "name": {
+            "type": "text"
+          }
+        }
+      }
+    name: terraform-test
+    numberOfReplicas: "1"
+    numberOfShards: "1"

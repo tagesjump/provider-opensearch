@@ -1,0 +1,40 @@
+apiVersion: index.opensearch.m.upbound.io/v1alpha1
+kind: Template
+metadata:
+  annotations:
+    meta.upbound.io/example-id: index/v1alpha1/template
+  labels:
+    testing.upbound.io/example-name: template_1
+  name: template-1
+  namespace: upbound-system
+spec:
+  forProvider:
+    body: |
+      {
+        "index_patterns": [
+          "logs-2020-01-*"
+        ],
+        "template": {
+          "aliases": {
+            "my_logs": {}
+          },
+          "settings": {
+            "index": {
+              "number_of_shards": "2",
+              "number_of_replicas": "1"
+            }
+          },
+          "mappings": {
+            "properties": {
+              "timestamp": {
+                "type": "date",
+                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+              },
+              "value": {
+                "type": "double"
+              }
+            }
+          }
+        }
+      }
+    name: template_1

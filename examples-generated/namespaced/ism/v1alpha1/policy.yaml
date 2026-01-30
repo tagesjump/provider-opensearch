@@ -1,0 +1,13 @@
+apiVersion: ism.opensearch.m.upbound.io/v1alpha1
+kind: Policy
+metadata:
+  annotations:
+    meta.upbound.io/example-id: ism/v1alpha1/policy
+  labels:
+    testing.upbound.io/example-name: cleanup
+  name: cleanup
+  namespace: upbound-system
+spec:
+  forProvider:
+    body: ${file("${path.module}/policies/delete_after_15d.json")}
+    policyId: delete_after_15d

@@ -5,7 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/crossplane/upjet/pkg/pipeline"
+	"github.com/alecthomas/kingpin/v2"
+
+	"github.com/crossplane/upjet/v2/pkg/pipeline"
 
 	"github.com/tagesjump/provider-opensearch/config"
 )
@@ -19,5 +21,9 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("cannot calculate the absolute path with %s", rootDir))
 	}
-	pipeline.Run(config.GetProvider(), absRootDir)
+	pc, err := config.GetProvider(true)
+	kingpin.FatalIfError(err, "Cannot initialize the cluster provider configuration")
+	pn, err := config.GetProviderNamespaced(true)
+	kingpin.FatalIfError(err, "Cannot initialize the namespaced provider configuration")
+	pipeline.Run(pc, pn, absRootDir)
 }

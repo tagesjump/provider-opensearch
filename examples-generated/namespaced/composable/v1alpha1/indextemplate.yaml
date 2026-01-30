@@ -1,0 +1,39 @@
+apiVersion: composable.opensearch.m.upbound.io/v1alpha1
+kind: IndexTemplate
+metadata:
+  annotations:
+    meta.upbound.io/example-id: composable/v1alpha1/indextemplate
+  labels:
+    testing.upbound.io/example-name: template_1
+  name: template-1
+  namespace: upbound-system
+spec:
+  forProvider:
+    body: |
+      {
+        "index_patterns": ["te*", "bar*"],
+        "template": {
+          "settings": {
+            "index": {
+              "number_of_shards": "1"
+            }
+          },
+          "mappings": {
+            "properties": {
+              "host_name": {
+                "type": "keyword"
+              },
+              "created_at": {
+                "type": "date",
+                "format": "EEE MMM dd HH:mm:ss Z yyyy"
+              }
+            }
+          },
+          "aliases": {
+            "mydata": { }
+          }
+        },
+        "priority": 200,
+        "version": 3
+      }
+    name: template_1

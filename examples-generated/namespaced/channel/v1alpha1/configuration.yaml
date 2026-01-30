@@ -1,0 +1,24 @@
+apiVersion: channel.opensearch.m.upbound.io/v1alpha1
+kind: Configuration
+metadata:
+  annotations:
+    meta.upbound.io/example-id: channel/v1alpha1/configuration
+  labels:
+    testing.upbound.io/example-name: configuration_1
+  name: configuration-1
+  namespace: upbound-system
+spec:
+  forProvider:
+    body: |
+      {
+        "config_id": "configuration_1",
+        "config": {
+          "name": "name",
+          "description" : "description",
+          "config_type" : "slack",
+          "is_enabled" : true,
+          "slack": {
+            "url": "https://sample-slack-webhook"
+          }
+        }
+      }
