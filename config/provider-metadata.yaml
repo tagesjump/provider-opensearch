@@ -195,6 +195,7 @@ resources:
             cluster_persistent_tasks_allocation_recheck_interval: (String) A time string controling how often assignment checks are performed to react to whether persistent tasks can be assigned to nodes
             cluster_routing_allocation_allow_rebalance: (String) Specify when shard rebalancing is allowed (always, indices_primaries_active, indices_all_active)
             cluster_routing_allocation_awareness_attributes: (String) Use custom node attributes to take hardware configuration into account when allocating shards
+            cluster_routing_allocation_awareness_force_zone_values: (List of String) A list of zones for awareness allocation.
             cluster_routing_allocation_balance_index: (Number) Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
             cluster_routing_allocation_balance_shard: (Number) Weight factor for the total number of shards allocated on a node, increasing this raises the tendency to equalize the number of shards across all nodes
             cluster_routing_allocation_balance_threshold: (Number) Minimal optimization value of operations that should be performed, raising this will cause the cluster to be less aggressive about optimizing the shard balance
@@ -211,6 +212,11 @@ resources:
             cluster_routing_allocation_same_shard_host: (Boolean) Perform a check to prevent allocation of multiple instances of the same shard on a single host, if multiple nodes are started on the host
             cluster_routing_allocation_total_shards_per_node: (Number) Maximum number of primary and replica shards allocated to each node
             cluster_routing_rebalance_enable: (String) Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
+            cluster_search_request_slowlog_level: (String) Log level for search requests slowlog (TRACE, DEBUG, INFO, WARN)
+            cluster_search_request_slowlog_threshold_debug: (String) Slowlog threshold for DEBUG level search requests (e.g., 2s)
+            cluster_search_request_slowlog_threshold_info: (String) Slowlog threshold for INFO level search requests (e.g., 5s)
+            cluster_search_request_slowlog_threshold_trace: (String) Slowlog threshold for TRACE level search requests (e.g., 10ms)
+            cluster_search_request_slowlog_threshold_warn: (String) Slowlog threshold for WARN level search requests (e.g., 10s)
             id: (String) The ID of this resource.
             indices_breaker_fielddata_limit: (String) The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
             indices_breaker_fielddata_overhead: (Number) A constant that all field data estimations are multiplied by
@@ -220,6 +226,7 @@ resources:
             indices_recovery_max_bytes_per_sec: (String) Maximum total inbound and outbound recovery traffic for each node, in mb
             network_breaker_inflight_requests_limit: (String) The percentage limit of memory usage on a node of all currently active incoming requests on transport or HTTP level
             network_breaker_inflight_requests_overhead: (Number) A constant that all in flight requests estimations are multiplied by
+            reset_settings_on_delete: (Boolean) If true, cluster settings will be reset to defaults when this resource is deleted
             script_max_compilations_rate: (String) Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
             search_default_search_timeout: (String) A time string setting a cluster-wide default timeout for all search requests
         importStatements: []
@@ -270,27 +277,32 @@ resources:
             - name: test_visualization_v6
               manifest: |-
                 {
-                  "body": "[\n  {\n    \"_id\": \"visualization:response-time-percentile\",\n    \"_type\": \"doc\",\n    \"_source\": {\n      \"type\": \"visualization\",\n      \"visualization\": {\n        \"title\": \"Total response time percentiles\",\n        \"visState\": \"{\\\"title\\\":\\\"Total response time percentiles\\\",\\\"type\\\":\\\"line\\\",\\\"params\\\":{\\\"addTooltip\\\":true,\\\"addLegend\\\":true,\\\"legendPosition\\\":\\\"right\\\",\\\"showCircles\\\":true,\\\"interpolate\\\":\\\"linear\\\",\\\"scale\\\":\\\"linear\\\",\\\"drawLinesBetweenPoints\\\":true,\\\"radiusRatio\\\":9,\\\"times\\\":[],\\\"addTimeMarker\\\":false,\\\"defaultYExtents\\\":false,\\\"setYExtents\\\":false},\\\"aggs\\\":[{\\\"id\\\":\\\"1\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"percentiles\\\",\\\"schema\\\":\\\"metric\\\",\\\"params\\\":{\\\"field\\\":\\\"app.total_time\\\",\\\"percents\\\":[50,90,95]}},{\\\"id\\\":\\\"2\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"date_histogram\\\",\\\"schema\\\":\\\"segment\\\",\\\"params\\\":{\\\"field\\\":\\\"@timestamp\\\",\\\"interval\\\":\\\"auto\\\",\\\"customInterval\\\":\\\"2h\\\",\\\"min_doc_count\\\":1,\\\"extended_bounds\\\":{}}},{\\\"id\\\":\\\"3\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"terms\\\",\\\"schema\\\":\\\"group\\\",\\\"params\\\":{\\\"field\\\":\\\"system.syslog.program\\\",\\\"size\\\":5,\\\"order\\\":\\\"desc\\\",\\\"orderBy\\\":\\\"_term\\\"}}],\\\"listeners\\\":{}}\",\n        \"uiStateJSON\": \"{}\",\n        \"description\": \"\",\n        \"version\": 1\n      }\n    }\n  }\n]\n"
+                  "body": "[\n  {\n    \"_id\": \"visualization:response-time-percentile\",\n    \"_type\": \"doc\",\n    \"_source\": {\n      \"type\": \"visualization\",\n      \"visualization\": {\n        \"title\": \"Total response time percentiles\",\n        \"visState\": \"{\\\"title\\\":\\\"Total response time percentiles\\\",\\\"type\\\":\\\"line\\\",\\\"params\\\":{\\\"addTooltip\\\":true,\\\"addLegend\\\":true,\\\"legendPosition\\\":\\\"right\\\",\\\"showCircles\\\":true,\\\"interpolate\\\":\\\"linear\\\",\\\"scale\\\":\\\"linear\\\",\\\"drawLinesBetweenPoints\\\":true,\\\"radiusRatio\\\":9,\\\"times\\\":[],\\\"addTimeMarker\\\":false,\\\"defaultYExtents\\\":false,\\\"setYExtents\\\":false},\\\"aggs\\\":[{\\\"id\\\":\\\"1\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"percentiles\\\",\\\"schema\\\":\\\"metric\\\",\\\"params\\\":{\\\"field\\\":\\\"app.total_time\\\",\\\"percents\\\":[50,90,95]}},{\\\"id\\\":\\\"2\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"date_histogram\\\",\\\"schema\\\":\\\"segment\\\",\\\"params\\\":{\\\"field\\\":\\\"@timestamp\\\",\\\"interval\\\":\\\"auto\\\",\\\"customInterval\\\":\\\"2h\\\",\\\"min_doc_count\\\":1,\\\"extended_bounds\\\":{}}},{\\\"id\\\":\\\"3\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"terms\\\",\\\"schema\\\":\\\"group\\\",\\\"params\\\":{\\\"field\\\":\\\"system.syslog.program\\\",\\\"size\\\":5,\\\"order\\\":\\\"desc\\\",\\\"orderBy\\\":\\\"_term\\\"}}],\\\"listeners\\\":{}}\",\n        \"uiStateJSON\": \"{}\",\n        \"description\": \"\",\n        \"version\": 1\n      }\n    }\n  }\n]\n",
+                  "tenant_name": "tenant"
                 }
             - name: test_visualization_v7
               manifest: |-
                 {
-                  "body": "[\n  {\n    \"_id\": \"response-time-percentile\",\n    \"_source\": {\n      \"type\": \"visualization\",\n      \"visualization\": {\n        \"title\": \"Total response time percentiles\",\n        \"visState\": \"{\\\"title\\\":\\\"Total response time percentiles\\\",\\\"type\\\":\\\"line\\\",\\\"params\\\":{\\\"addTooltip\\\":true,\\\"addLegend\\\":true,\\\"legendPosition\\\":\\\"right\\\",\\\"showCircles\\\":true,\\\"interpolate\\\":\\\"linear\\\",\\\"scale\\\":\\\"linear\\\",\\\"drawLinesBetweenPoints\\\":true,\\\"radiusRatio\\\":9,\\\"times\\\":[],\\\"addTimeMarker\\\":false,\\\"defaultYExtents\\\":false,\\\"setYExtents\\\":false},\\\"aggs\\\":[{\\\"id\\\":\\\"1\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"percentiles\\\",\\\"schema\\\":\\\"metric\\\",\\\"params\\\":{\\\"field\\\":\\\"app.total_time\\\",\\\"percents\\\":[50,90,95]}},{\\\"id\\\":\\\"2\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"date_histogram\\\",\\\"schema\\\":\\\"segment\\\",\\\"params\\\":{\\\"field\\\":\\\"@timestamp\\\",\\\"interval\\\":\\\"auto\\\",\\\"customInterval\\\":\\\"2h\\\",\\\"min_doc_count\\\":1,\\\"extended_bounds\\\":{}}},{\\\"id\\\":\\\"3\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"terms\\\",\\\"schema\\\":\\\"group\\\",\\\"params\\\":{\\\"field\\\":\\\"system.syslog.program\\\",\\\"size\\\":5,\\\"order\\\":\\\"desc\\\",\\\"orderBy\\\":\\\"_term\\\"}}],\\\"listeners\\\":{}}\",\n        \"uiStateJSON\": \"{}\",\n        \"description\": \"\",\n        \"version\": 1\n      }\n    }\n  }\n]\n"
+                  "body": "[\n  {\n    \"_id\": \"response-time-percentile\",\n    \"_source\": {\n      \"type\": \"visualization\",\n      \"visualization\": {\n        \"title\": \"Total response time percentiles\",\n        \"visState\": \"{\\\"title\\\":\\\"Total response time percentiles\\\",\\\"type\\\":\\\"line\\\",\\\"params\\\":{\\\"addTooltip\\\":true,\\\"addLegend\\\":true,\\\"legendPosition\\\":\\\"right\\\",\\\"showCircles\\\":true,\\\"interpolate\\\":\\\"linear\\\",\\\"scale\\\":\\\"linear\\\",\\\"drawLinesBetweenPoints\\\":true,\\\"radiusRatio\\\":9,\\\"times\\\":[],\\\"addTimeMarker\\\":false,\\\"defaultYExtents\\\":false,\\\"setYExtents\\\":false},\\\"aggs\\\":[{\\\"id\\\":\\\"1\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"percentiles\\\",\\\"schema\\\":\\\"metric\\\",\\\"params\\\":{\\\"field\\\":\\\"app.total_time\\\",\\\"percents\\\":[50,90,95]}},{\\\"id\\\":\\\"2\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"date_histogram\\\",\\\"schema\\\":\\\"segment\\\",\\\"params\\\":{\\\"field\\\":\\\"@timestamp\\\",\\\"interval\\\":\\\"auto\\\",\\\"customInterval\\\":\\\"2h\\\",\\\"min_doc_count\\\":1,\\\"extended_bounds\\\":{}}},{\\\"id\\\":\\\"3\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"terms\\\",\\\"schema\\\":\\\"group\\\",\\\"params\\\":{\\\"field\\\":\\\"system.syslog.program\\\",\\\"size\\\":5,\\\"order\\\":\\\"desc\\\",\\\"orderBy\\\":\\\"_term\\\"}}],\\\"listeners\\\":{}}\",\n        \"uiStateJSON\": \"{}\",\n        \"description\": \"\",\n        \"version\": 1\n      }\n    }\n  }\n]\n",
+                  "tenant_name": "tenant"
                 }
             - name: test_index_pattern_v6
               manifest: |-
                 {
-                  "body": "[\n  {\n    \"_id\": \"index-pattern:cloudwatch\",\n    \"_type\": \"doc\",\n    \"_source\": {\n      \"type\": \"index-pattern\",\n      \"index-pattern\": {\n        \"title\": \"cloudwatch-*\",\n        \"timeFieldName\": \"timestamp\"\n      }\n    }\n  }\n]\n"
+                  "body": "[\n  {\n    \"_id\": \"index-pattern:cloudwatch\",\n    \"_type\": \"doc\",\n    \"_source\": {\n      \"type\": \"index-pattern\",\n      \"index-pattern\": {\n        \"title\": \"cloudwatch-*\",\n        \"timeFieldName\": \"timestamp\"\n      }\n    }\n  }\n]\n",
+                  "tenant_name": "tenant"
                 }
             - name: test_index_pattern_v7
               manifest: |-
                 {
-                  "body": "[\n  {\n    \"_id\": \"index-pattern:cloudwatch\",\n    \"_type\": \"doc\",\n    \"_source\": {\n      \"type\": \"index-pattern\",\n      \"index-pattern\": {\n        \"title\": \"cloudwatch-*\",\n        \"timeFieldName\": \"timestamp\"\n      }\n    }\n  }\n]\n"
+                  "body": "[\n  {\n    \"_id\": \"index-pattern:cloudwatch\",\n    \"_type\": \"doc\",\n    \"_source\": {\n      \"type\": \"index-pattern\",\n      \"index-pattern\": {\n        \"title\": \"cloudwatch-*\",\n        \"timeFieldName\": \"timestamp\"\n      }\n    }\n  }\n]\n",
+                  "tenant_name": "tenant"
                 }
         argumentDocs:
             body: (String) The JSON body of the dashboard object.
             id: (String) The ID of this resource.
-            index: (String) The name of the index where dashboard data is stored.
+            index: (String) The name of the index where dashboard data is stored. Does not work with tenant_name.
+            tenant_name: (String) The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
         importStatements: []
     opensearch_dashboard_tenant:
         subCategory: ""
@@ -356,6 +368,15 @@ resources:
                 {
                   "mappings": "{\n  \"properties\": {\n    \"name\": {\n      \"type\": \"text\"\n    }\n  }\n}\n",
                   "name": "terraform-test",
+                  "number_of_replicas": "1",
+                  "number_of_shards": "1"
+                }
+            - name: index
+              manifest: |-
+                {
+                  "aliases": "${jsonencode(\n   {\n    \"log\": {\n      \"is_write_index\": true\n    }\n  }\n  )}",
+                  "mappings": "${jsonencode({\n    \"properties\": {\n      \"age\": {\n        \"type\": \"integer\"\n      }\n    }\n  })}",
+                  "name": "sample",
                   "number_of_replicas": "1",
                   "number_of_shards": "1"
                 }

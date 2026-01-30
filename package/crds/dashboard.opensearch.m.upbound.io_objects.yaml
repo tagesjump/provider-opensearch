@@ -70,8 +70,13 @@ spec:
                     type: string
                   index:
                     description: |-
-                      (String) The name of the index where dashboard data is stored.
-                      The name of the index where dashboard data is stored.
+                      (String) The name of the index where dashboard data is stored. Does not work with tenant_name.
+                      The name of the index where dashboard data is stored. Does not work with tenant_name.
+                    type: string
+                  tenantName:
+                    description: |-
+                      (String) The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+                      The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
                     type: string
                 type: object
               initProvider:
@@ -94,8 +99,13 @@ spec:
                     type: string
                   index:
                     description: |-
-                      (String) The name of the index where dashboard data is stored.
-                      The name of the index where dashboard data is stored.
+                      (String) The name of the index where dashboard data is stored. Does not work with tenant_name.
+                      The name of the index where dashboard data is stored. Does not work with tenant_name.
+                    type: string
+                  tenantName:
+                    description: |-
+                      (String) The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+                      The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
                     type: string
                 type: object
               managementPolicies:
@@ -176,8 +186,13 @@ spec:
                     type: string
                   index:
                     description: |-
-                      (String) The name of the index where dashboard data is stored.
-                      The name of the index where dashboard data is stored.
+                      (String) The name of the index where dashboard data is stored. Does not work with tenant_name.
+                      The name of the index where dashboard data is stored. Does not work with tenant_name.
+                    type: string
+                  tenantName:
+                    description: |-
+                      (String) The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+                      The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
                     type: string
                 type: object
               conditions:

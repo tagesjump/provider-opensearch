@@ -15,9 +15,13 @@ type ObjectInitParameters struct {
 	// The JSON body of the dashboard object.
 	Body *string `json:"body,omitempty" tf:"body,omitempty"`
 
-	// (String) The name of the index where dashboard data is stored.
-	// The name of the index where dashboard data is stored.
+	// (String) The name of the index where dashboard data is stored. Does not work with tenant_name.
+	// The name of the index where dashboard data is stored. Does not work with tenant_name.
 	Index *string `json:"index,omitempty" tf:"index,omitempty"`
+
+	// (String) The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+	// The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+	TenantName *string `json:"tenantName,omitempty" tf:"tenant_name,omitempty"`
 }
 
 type ObjectObservation struct {
@@ -29,9 +33,13 @@ type ObjectObservation struct {
 	// (String) The ID of this resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-	// (String) The name of the index where dashboard data is stored.
-	// The name of the index where dashboard data is stored.
+	// (String) The name of the index where dashboard data is stored. Does not work with tenant_name.
+	// The name of the index where dashboard data is stored. Does not work with tenant_name.
 	Index *string `json:"index,omitempty" tf:"index,omitempty"`
+
+	// (String) The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+	// The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+	TenantName *string `json:"tenantName,omitempty" tf:"tenant_name,omitempty"`
 }
 
 type ObjectParameters struct {
@@ -41,10 +49,15 @@ type ObjectParameters struct {
 	// +kubebuilder:validation:Optional
 	Body *string `json:"body,omitempty" tf:"body,omitempty"`
 
-	// (String) The name of the index where dashboard data is stored.
-	// The name of the index where dashboard data is stored.
+	// (String) The name of the index where dashboard data is stored. Does not work with tenant_name.
+	// The name of the index where dashboard data is stored. Does not work with tenant_name.
 	// +kubebuilder:validation:Optional
 	Index *string `json:"index,omitempty" tf:"index,omitempty"`
+
+	// (String) The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+	// The name of the tenant to which dashboard data associate. Empty string defaults to global tenant.
+	// +kubebuilder:validation:Optional
+	TenantName *string `json:"tenantName,omitempty" tf:"tenant_name,omitempty"`
 }
 
 // ObjectSpec defines the desired state of Object

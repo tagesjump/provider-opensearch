@@ -63,6 +63,10 @@ type SettingsInitParameters struct {
 	// Use custom node attributes to take hardware configuration into account when allocating shards
 	ClusterRoutingAllocationAwarenessAttributes *string `json:"clusterRoutingAllocationAwarenessAttributes,omitempty" tf:"cluster_routing_allocation_awareness_attributes,omitempty"`
 
+	// (List of String) A list of zones for awareness allocation.
+	// A list of zones for awareness allocation.
+	ClusterRoutingAllocationAwarenessForceZoneValues []*string `json:"clusterRoutingAllocationAwarenessForceZoneValues,omitempty" tf:"cluster_routing_allocation_awareness_force_zone_values,omitempty"`
+
 	// (Number) Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
 	// Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
 	ClusterRoutingAllocationBalanceIndex *float64 `json:"clusterRoutingAllocationBalanceIndex,omitempty" tf:"cluster_routing_allocation_balance_index,omitempty"`
@@ -127,6 +131,26 @@ type SettingsInitParameters struct {
 	// Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
 	ClusterRoutingRebalanceEnable *string `json:"clusterRoutingRebalanceEnable,omitempty" tf:"cluster_routing_rebalance_enable,omitempty"`
 
+	// (String) Log level for search requests slowlog (TRACE, DEBUG, INFO, WARN)
+	// Log level for search requests slowlog (TRACE, DEBUG, INFO, WARN)
+	ClusterSearchRequestSlowlogLevel *string `json:"clusterSearchRequestSlowlogLevel,omitempty" tf:"cluster_search_request_slowlog_level,omitempty"`
+
+	// (String) Slowlog threshold for DEBUG level search requests (e.g., 2s)
+	// Slowlog threshold for DEBUG level search requests (e.g., 2s)
+	ClusterSearchRequestSlowlogThresholdDebug *string `json:"clusterSearchRequestSlowlogThresholdDebug,omitempty" tf:"cluster_search_request_slowlog_threshold_debug,omitempty"`
+
+	// (String) Slowlog threshold for INFO level search requests (e.g., 5s)
+	// Slowlog threshold for INFO level search requests (e.g., 5s)
+	ClusterSearchRequestSlowlogThresholdInfo *string `json:"clusterSearchRequestSlowlogThresholdInfo,omitempty" tf:"cluster_search_request_slowlog_threshold_info,omitempty"`
+
+	// (String) Slowlog threshold for TRACE level search requests (e.g., 10ms)
+	// Slowlog threshold for TRACE level search requests (e.g., 10ms)
+	ClusterSearchRequestSlowlogThresholdTrace *string `json:"clusterSearchRequestSlowlogThresholdTrace,omitempty" tf:"cluster_search_request_slowlog_threshold_trace,omitempty"`
+
+	// (String) Slowlog threshold for WARN level search requests (e.g., 10s)
+	// Slowlog threshold for WARN level search requests (e.g., 10s)
+	ClusterSearchRequestSlowlogThresholdWarn *string `json:"clusterSearchRequestSlowlogThresholdWarn,omitempty" tf:"cluster_search_request_slowlog_threshold_warn,omitempty"`
+
 	// (String) The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
 	// The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
 	IndicesBreakerFielddataLimit *string `json:"indicesBreakerFielddataLimit,omitempty" tf:"indices_breaker_fielddata_limit,omitempty"`
@@ -158,6 +182,10 @@ type SettingsInitParameters struct {
 	// (Number) A constant that all in flight requests estimations are multiplied by
 	// A constant that all in flight requests estimations are multiplied by
 	NetworkBreakerInflightRequestsOverhead *float64 `json:"networkBreakerInflightRequestsOverhead,omitempty" tf:"network_breaker_inflight_requests_overhead,omitempty"`
+
+	// (Boolean) If true, cluster settings will be reset to defaults when this resource is deleted
+	// If true, cluster settings will be reset to defaults when this resource is deleted
+	ResetSettingsOnDelete *bool `json:"resetSettingsOnDelete,omitempty" tf:"reset_settings_on_delete,omitempty"`
 
 	// (String) Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
 	// Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
@@ -222,6 +250,10 @@ type SettingsObservation struct {
 	// Use custom node attributes to take hardware configuration into account when allocating shards
 	ClusterRoutingAllocationAwarenessAttributes *string `json:"clusterRoutingAllocationAwarenessAttributes,omitempty" tf:"cluster_routing_allocation_awareness_attributes,omitempty"`
 
+	// (List of String) A list of zones for awareness allocation.
+	// A list of zones for awareness allocation.
+	ClusterRoutingAllocationAwarenessForceZoneValues []*string `json:"clusterRoutingAllocationAwarenessForceZoneValues,omitempty" tf:"cluster_routing_allocation_awareness_force_zone_values,omitempty"`
+
 	// (Number) Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
 	// Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
 	ClusterRoutingAllocationBalanceIndex *float64 `json:"clusterRoutingAllocationBalanceIndex,omitempty" tf:"cluster_routing_allocation_balance_index,omitempty"`
@@ -286,6 +318,26 @@ type SettingsObservation struct {
 	// Allow rebalancing for specific kinds of shards (all, primaries, replicas, none)
 	ClusterRoutingRebalanceEnable *string `json:"clusterRoutingRebalanceEnable,omitempty" tf:"cluster_routing_rebalance_enable,omitempty"`
 
+	// (String) Log level for search requests slowlog (TRACE, DEBUG, INFO, WARN)
+	// Log level for search requests slowlog (TRACE, DEBUG, INFO, WARN)
+	ClusterSearchRequestSlowlogLevel *string `json:"clusterSearchRequestSlowlogLevel,omitempty" tf:"cluster_search_request_slowlog_level,omitempty"`
+
+	// (String) Slowlog threshold for DEBUG level search requests (e.g., 2s)
+	// Slowlog threshold for DEBUG level search requests (e.g., 2s)
+	ClusterSearchRequestSlowlogThresholdDebug *string `json:"clusterSearchRequestSlowlogThresholdDebug,omitempty" tf:"cluster_search_request_slowlog_threshold_debug,omitempty"`
+
+	// (String) Slowlog threshold for INFO level search requests (e.g., 5s)
+	// Slowlog threshold for INFO level search requests (e.g., 5s)
+	ClusterSearchRequestSlowlogThresholdInfo *string `json:"clusterSearchRequestSlowlogThresholdInfo,omitempty" tf:"cluster_search_request_slowlog_threshold_info,omitempty"`
+
+	// (String) Slowlog threshold for TRACE level search requests (e.g., 10ms)
+	// Slowlog threshold for TRACE level search requests (e.g., 10ms)
+	ClusterSearchRequestSlowlogThresholdTrace *string `json:"clusterSearchRequestSlowlogThresholdTrace,omitempty" tf:"cluster_search_request_slowlog_threshold_trace,omitempty"`
+
+	// (String) Slowlog threshold for WARN level search requests (e.g., 10s)
+	// Slowlog threshold for WARN level search requests (e.g., 10s)
+	ClusterSearchRequestSlowlogThresholdWarn *string `json:"clusterSearchRequestSlowlogThresholdWarn,omitempty" tf:"cluster_search_request_slowlog_threshold_warn,omitempty"`
+
 	// (String) The ID of this resource.
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
@@ -320,6 +372,10 @@ type SettingsObservation struct {
 	// (Number) A constant that all in flight requests estimations are multiplied by
 	// A constant that all in flight requests estimations are multiplied by
 	NetworkBreakerInflightRequestsOverhead *float64 `json:"networkBreakerInflightRequestsOverhead,omitempty" tf:"network_breaker_inflight_requests_overhead,omitempty"`
+
+	// (Boolean) If true, cluster settings will be reset to defaults when this resource is deleted
+	// If true, cluster settings will be reset to defaults when this resource is deleted
+	ResetSettingsOnDelete *bool `json:"resetSettingsOnDelete,omitempty" tf:"reset_settings_on_delete,omitempty"`
 
 	// (String) Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
 	// Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
@@ -397,6 +453,11 @@ type SettingsParameters struct {
 	// +kubebuilder:validation:Optional
 	ClusterRoutingAllocationAwarenessAttributes *string `json:"clusterRoutingAllocationAwarenessAttributes,omitempty" tf:"cluster_routing_allocation_awareness_attributes,omitempty"`
 
+	// (List of String) A list of zones for awareness allocation.
+	// A list of zones for awareness allocation.
+	// +kubebuilder:validation:Optional
+	ClusterRoutingAllocationAwarenessForceZoneValues []*string `json:"clusterRoutingAllocationAwarenessForceZoneValues,omitempty" tf:"cluster_routing_allocation_awareness_force_zone_values,omitempty"`
+
 	// (Number) Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
 	// Weight factor for the number of shards per index allocated on a node, increasing this raises the tendency to equalize the number of shards per index across all nodes
 	// +kubebuilder:validation:Optional
@@ -477,6 +538,31 @@ type SettingsParameters struct {
 	// +kubebuilder:validation:Optional
 	ClusterRoutingRebalanceEnable *string `json:"clusterRoutingRebalanceEnable,omitempty" tf:"cluster_routing_rebalance_enable,omitempty"`
 
+	// (String) Log level for search requests slowlog (TRACE, DEBUG, INFO, WARN)
+	// Log level for search requests slowlog (TRACE, DEBUG, INFO, WARN)
+	// +kubebuilder:validation:Optional
+	ClusterSearchRequestSlowlogLevel *string `json:"clusterSearchRequestSlowlogLevel,omitempty" tf:"cluster_search_request_slowlog_level,omitempty"`
+
+	// (String) Slowlog threshold for DEBUG level search requests (e.g., 2s)
+	// Slowlog threshold for DEBUG level search requests (e.g., 2s)
+	// +kubebuilder:validation:Optional
+	ClusterSearchRequestSlowlogThresholdDebug *string `json:"clusterSearchRequestSlowlogThresholdDebug,omitempty" tf:"cluster_search_request_slowlog_threshold_debug,omitempty"`
+
+	// (String) Slowlog threshold for INFO level search requests (e.g., 5s)
+	// Slowlog threshold for INFO level search requests (e.g., 5s)
+	// +kubebuilder:validation:Optional
+	ClusterSearchRequestSlowlogThresholdInfo *string `json:"clusterSearchRequestSlowlogThresholdInfo,omitempty" tf:"cluster_search_request_slowlog_threshold_info,omitempty"`
+
+	// (String) Slowlog threshold for TRACE level search requests (e.g., 10ms)
+	// Slowlog threshold for TRACE level search requests (e.g., 10ms)
+	// +kubebuilder:validation:Optional
+	ClusterSearchRequestSlowlogThresholdTrace *string `json:"clusterSearchRequestSlowlogThresholdTrace,omitempty" tf:"cluster_search_request_slowlog_threshold_trace,omitempty"`
+
+	// (String) Slowlog threshold for WARN level search requests (e.g., 10s)
+	// Slowlog threshold for WARN level search requests (e.g., 10s)
+	// +kubebuilder:validation:Optional
+	ClusterSearchRequestSlowlogThresholdWarn *string `json:"clusterSearchRequestSlowlogThresholdWarn,omitempty" tf:"cluster_search_request_slowlog_threshold_warn,omitempty"`
+
 	// (String) The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
 	// The percentage of memory above which if loading a field into the field data cache would cause the cache to exceed this limit, an error is returned
 	// +kubebuilder:validation:Optional
@@ -516,6 +602,11 @@ type SettingsParameters struct {
 	// A constant that all in flight requests estimations are multiplied by
 	// +kubebuilder:validation:Optional
 	NetworkBreakerInflightRequestsOverhead *float64 `json:"networkBreakerInflightRequestsOverhead,omitempty" tf:"network_breaker_inflight_requests_overhead,omitempty"`
+
+	// (Boolean) If true, cluster settings will be reset to defaults when this resource is deleted
+	// If true, cluster settings will be reset to defaults when this resource is deleted
+	// +kubebuilder:validation:Optional
+	ResetSettingsOnDelete *bool `json:"resetSettingsOnDelete,omitempty" tf:"reset_settings_on_delete,omitempty"`
 
 	// (String) Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
 	// Limit for the number of unique dynamic scripts within a certain interval that are allowed to be compiled, expressed as compilations divided by a time string
