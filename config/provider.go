@@ -4,8 +4,9 @@ import (
 	// Note(turkenh): we are importing this to embed provider schema document
 	_ "embed"
 
-	"github.com/crossplane/upjet/v2/pkg/registry/reference"
 	opensearch "github.com/opensearch-project/terraform-provider-opensearch/provider"
+
+	"github.com/crossplane/upjet/v2/pkg/registry/reference"
 
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"

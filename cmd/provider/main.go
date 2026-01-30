@@ -28,8 +28,6 @@ import (
 	"github.com/crossplane/crossplane-runtime/v2/pkg/ratelimiter"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/reconciler/customresourcesgate"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/reconciler/managed"
-	tjcontroller "github.com/crossplane/upjet/v2/pkg/controller"
-	"github.com/crossplane/upjet/v2/pkg/terraform"
 	"github.com/pkg/errors"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"k8s.io/client-go/tools/leaderelection/resourcelock"
@@ -37,6 +35,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
+
+	tjcontroller "github.com/crossplane/upjet/v2/pkg/controller"
+	"github.com/crossplane/upjet/v2/pkg/terraform"
 
 	apisCluster "github.com/tagesjump/provider-opensearch/apis/cluster"
 	apisNamespaced "github.com/tagesjump/provider-opensearch/apis/namespaced"
