@@ -103,6 +103,17 @@ func (in *SettingsInitParameters) DeepCopyInto(out *SettingsInitParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ClusterRoutingAllocationAwarenessForceZoneValues != nil {
+		in, out := &in.ClusterRoutingAllocationAwarenessForceZoneValues, &out.ClusterRoutingAllocationAwarenessForceZoneValues
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
+	}
 	if in.ClusterRoutingAllocationBalanceIndex != nil {
 		in, out := &in.ClusterRoutingAllocationBalanceIndex, &out.ClusterRoutingAllocationBalanceIndex
 		*out = new(float64)
@@ -183,6 +194,31 @@ func (in *SettingsInitParameters) DeepCopyInto(out *SettingsInitParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ClusterSearchRequestSlowlogLevel != nil {
+		in, out := &in.ClusterSearchRequestSlowlogLevel, &out.ClusterSearchRequestSlowlogLevel
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdDebug != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdDebug, &out.ClusterSearchRequestSlowlogThresholdDebug
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdInfo != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdInfo, &out.ClusterSearchRequestSlowlogThresholdInfo
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdTrace != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdTrace, &out.ClusterSearchRequestSlowlogThresholdTrace
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdWarn != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdWarn, &out.ClusterSearchRequestSlowlogThresholdWarn
+		*out = new(string)
+		**out = **in
+	}
 	if in.IndicesBreakerFielddataLimit != nil {
 		in, out := &in.IndicesBreakerFielddataLimit, &out.IndicesBreakerFielddataLimit
 		*out = new(string)
@@ -221,6 +257,11 @@ func (in *SettingsInitParameters) DeepCopyInto(out *SettingsInitParameters) {
 	if in.NetworkBreakerInflightRequestsOverhead != nil {
 		in, out := &in.NetworkBreakerInflightRequestsOverhead, &out.NetworkBreakerInflightRequestsOverhead
 		*out = new(float64)
+		**out = **in
+	}
+	if in.ResetSettingsOnDelete != nil {
+		in, out := &in.ResetSettingsOnDelete, &out.ResetSettingsOnDelete
+		*out = new(bool)
 		**out = **in
 	}
 	if in.ScriptMaxCompilationsRate != nil {
@@ -345,6 +386,17 @@ func (in *SettingsObservation) DeepCopyInto(out *SettingsObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ClusterRoutingAllocationAwarenessForceZoneValues != nil {
+		in, out := &in.ClusterRoutingAllocationAwarenessForceZoneValues, &out.ClusterRoutingAllocationAwarenessForceZoneValues
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
+	}
 	if in.ClusterRoutingAllocationBalanceIndex != nil {
 		in, out := &in.ClusterRoutingAllocationBalanceIndex, &out.ClusterRoutingAllocationBalanceIndex
 		*out = new(float64)
@@ -425,6 +477,31 @@ func (in *SettingsObservation) DeepCopyInto(out *SettingsObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ClusterSearchRequestSlowlogLevel != nil {
+		in, out := &in.ClusterSearchRequestSlowlogLevel, &out.ClusterSearchRequestSlowlogLevel
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdDebug != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdDebug, &out.ClusterSearchRequestSlowlogThresholdDebug
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdInfo != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdInfo, &out.ClusterSearchRequestSlowlogThresholdInfo
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdTrace != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdTrace, &out.ClusterSearchRequestSlowlogThresholdTrace
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdWarn != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdWarn, &out.ClusterSearchRequestSlowlogThresholdWarn
+		*out = new(string)
+		**out = **in
+	}
 	if in.ID != nil {
 		in, out := &in.ID, &out.ID
 		*out = new(string)
@@ -468,6 +545,11 @@ func (in *SettingsObservation) DeepCopyInto(out *SettingsObservation) {
 	if in.NetworkBreakerInflightRequestsOverhead != nil {
 		in, out := &in.NetworkBreakerInflightRequestsOverhead, &out.NetworkBreakerInflightRequestsOverhead
 		*out = new(float64)
+		**out = **in
+	}
+	if in.ResetSettingsOnDelete != nil {
+		in, out := &in.ResetSettingsOnDelete, &out.ResetSettingsOnDelete
+		*out = new(bool)
 		**out = **in
 	}
 	if in.ScriptMaxCompilationsRate != nil {
@@ -560,6 +642,17 @@ func (in *SettingsParameters) DeepCopyInto(out *SettingsParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ClusterRoutingAllocationAwarenessForceZoneValues != nil {
+		in, out := &in.ClusterRoutingAllocationAwarenessForceZoneValues, &out.ClusterRoutingAllocationAwarenessForceZoneValues
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
+	}
 	if in.ClusterRoutingAllocationBalanceIndex != nil {
 		in, out := &in.ClusterRoutingAllocationBalanceIndex, &out.ClusterRoutingAllocationBalanceIndex
 		*out = new(float64)
@@ -640,6 +733,31 @@ func (in *SettingsParameters) DeepCopyInto(out *SettingsParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ClusterSearchRequestSlowlogLevel != nil {
+		in, out := &in.ClusterSearchRequestSlowlogLevel, &out.ClusterSearchRequestSlowlogLevel
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdDebug != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdDebug, &out.ClusterSearchRequestSlowlogThresholdDebug
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdInfo != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdInfo, &out.ClusterSearchRequestSlowlogThresholdInfo
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdTrace != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdTrace, &out.ClusterSearchRequestSlowlogThresholdTrace
+		*out = new(string)
+		**out = **in
+	}
+	if in.ClusterSearchRequestSlowlogThresholdWarn != nil {
+		in, out := &in.ClusterSearchRequestSlowlogThresholdWarn, &out.ClusterSearchRequestSlowlogThresholdWarn
+		*out = new(string)
+		**out = **in
+	}
 	if in.IndicesBreakerFielddataLimit != nil {
 		in, out := &in.IndicesBreakerFielddataLimit, &out.IndicesBreakerFielddataLimit
 		*out = new(string)
@@ -678,6 +796,11 @@ func (in *SettingsParameters) DeepCopyInto(out *SettingsParameters) {
 	if in.NetworkBreakerInflightRequestsOverhead != nil {
 		in, out := &in.NetworkBreakerInflightRequestsOverhead, &out.NetworkBreakerInflightRequestsOverhead
 		*out = new(float64)
+		**out = **in
+	}
+	if in.ResetSettingsOnDelete != nil {
+		in, out := &in.ResetSettingsOnDelete, &out.ResetSettingsOnDelete
+		*out = new(bool)
 		**out = **in
 	}
 	if in.ScriptMaxCompilationsRate != nil {
