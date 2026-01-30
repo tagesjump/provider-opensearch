@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 
 	"github.com/crossplane/crossplane-runtime/v2/pkg/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	tfsdk "github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -81,15 +83,9 @@ const (
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
 // returns Terraform provider setup configuration
-func TerraformSetupBuilder(version, providerSource, providerVersion string) terraform.SetupFn {
+func TerraformSetupBuilder(tfProvider *schema.Provider) terraform.SetupFn {
 	return func(ctx context.Context, client client.Client, mg resource.Managed) (terraform.Setup, error) {
-		ps := terraform.Setup{
-			Version: version,
-			Requirement: terraform.ProviderRequirement{
-				Source:  providerSource,
-				Version: providerVersion,
-			},
-		}
+		ps := terraform.Setup{}
 
 		pcSpec, err := resolveProviderConfig(ctx, client, mg)
 		if err != nil {
@@ -125,8 +121,25 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 			}
 		}
 
-		return ps, nil
+		return ps, errors.Wrap(configureNoForkOpenSearchClient(ctx, &ps, *tfProvider), "failed to configure the Terraform OpenSearch provider meta")
 	}
+}
+
+func configureNoForkOpenSearchClient(ctx context.Context, ps *terraform.Setup, p schema.Provider) error {
+	// Please be aware that this implementation relies on the schema.Provider
+	// parameter `p` being a non-pointer. This is because normally
+	// the Terraform plugin SDK normally configures the provider
+	// only once and using a pointer argument here will cause
+	// race conditions between resources referring to different
+	// ProviderConfigs.
+	diag := p.Configure(ctx, &tfsdk.ResourceConfig{
+		Config: ps.Configuration,
+	})
+	if diag != nil && diag.HasError() {
+		return errors.Errorf("failed to configure the provider: %v", diag)
+	}
+	ps.Meta = p.Meta()
+	return nil
 }
 
 func toSharedPCSpec(pc *clusterv1beta1.ProviderConfig) (*namespacedv1beta1.ProviderConfigSpec, error) {

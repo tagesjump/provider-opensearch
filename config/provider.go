@@ -4,6 +4,7 @@ import (
 	// Note(turkenh): we are importing this to embed provider schema document
 	_ "embed"
 
+	"github.com/crossplane/upjet/v2/pkg/registry/reference"
 	opensearch "github.com/opensearch-project/terraform-provider-opensearch/provider"
 
 	tfjson "github.com/hashicorp/terraform-json"
@@ -70,7 +71,9 @@ func GetProvider(generationProvider bool) (*ujconfig.Provider, error) {
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithDefaultResourceOptions(
 			ExternalNameConfigurations(),
-		))
+		),
+		ujconfig.WithReferenceInjectors([]ujconfig.ReferenceInjector{reference.NewInjector(modulePath)}),
+	)
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		rolesClustered.Configure,

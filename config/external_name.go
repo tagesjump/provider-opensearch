@@ -32,12 +32,6 @@ var TerraformPluginSDKExternalNameConfigs = map[string]config.ExternalName{
 	"opensearch_user":                      config.IdentifierFromProvider,
 }
 
-// TerraformPluginFrameworkExternalNameConfigs contains all external
-// name configurations belonging to Terraform Plugin Framework
-// resources to be reconciled under the no-fork architecture for this
-// provider.
-var TerraformPluginFrameworkExternalNameConfigs = map[string]config.ExternalName{}
-
 // cliReconciledExternalNameConfigs contains all external name configurations
 // belonging to Terraform resources to be reconciled under the CLI-based
 // architecture for this provider.
@@ -49,8 +43,6 @@ var cliReconciledExternalNameConfigs = map[string]config.ExternalName{}
 func ExternalNameConfigurations() config.ResourceOption {
 	return func(r *config.Resource) {
 		if e, ok := TerraformPluginSDKExternalNameConfigs[r.Name]; ok {
-			r.ExternalName = e
-		} else if e, ok := TerraformPluginFrameworkExternalNameConfigs[r.Name]; ok {
 			r.ExternalName = e
 		} else if e, ok := cliReconciledExternalNameConfigs[r.Name]; ok {
 			r.ExternalName = e

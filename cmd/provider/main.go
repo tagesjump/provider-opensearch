@@ -2,9 +2,20 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"net/http/pprof"
 	"os"
 	"path/filepath"
 	"time"
+
+	changelogsv1alpha1 "github.com/crossplane/crossplane-runtime/v2/apis/changelogs/proto/v1alpha1"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
+	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	authv1 "k8s.io/api/authorization/v1"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -16,6 +27,7 @@ import (
 	"github.com/crossplane/crossplane-runtime/v2/pkg/logging"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/ratelimiter"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/reconciler/customresourcesgate"
+	"github.com/crossplane/crossplane-runtime/v2/pkg/reconciler/managed"
 	tjcontroller "github.com/crossplane/upjet/v2/pkg/controller"
 	"github.com/crossplane/upjet/v2/pkg/terraform"
 	"github.com/pkg/errors"
@@ -33,6 +45,7 @@ import (
 	controllerCluster "github.com/tagesjump/provider-opensearch/internal/controller/cluster"
 	controllerNamespaced "github.com/tagesjump/provider-opensearch/internal/controller/namespaced"
 	"github.com/tagesjump/provider-opensearch/internal/features"
+	"github.com/tagesjump/provider-opensearch/internal/version"
 )
 
 const (
@@ -44,20 +57,19 @@ const (
 
 func main() {
 	var (
-		app   = kingpin.New(filepath.Base(os.Args[0]), "Terraform based Crossplane provider for OpenSearch").DefaultEnvars()
-		debug = app.Flag("debug", "Run with debug logging.").Short('d').Bool()
-		// syncPeriod       = app.Flag("cache-sync", "Controller manager sync period such as 300ms, 1.5h, or 2h45m").Short('s').Default("1h").Duration()
-		syncInterval = app.Flag("sync", "Sync interval controls how often all resources will be double checked for drift.").Short('s').Default("1h").Duration()
-
+		app              = kingpin.New(filepath.Base(os.Args[0]), "Terraform based Crossplane provider for OpenSearch").DefaultEnvars()
+		debug            = app.Flag("debug", "Run with debug logging.").Short('d').Bool()
+		syncPeriod       = app.Flag("sync", "Sync interval controls how often all resources will be double checked for drift.").Short('s').Default("1h").Duration()
 		pollInterval     = app.Flag("poll", "Poll interval controls how often an individual resource should be checked for drift.").Default("10m").Duration()
 		leaderElection   = app.Flag("leader-election", "Use leader election for the controller manager.").Short('l').Default("false").OverrideDefaultFromEnvar("LEADER_ELECTION").Bool()
 		maxReconcileRate = app.Flag("max-reconcile-rate", "The global maximum rate per second at which resources may be checked for drift from the desired state.").Default("10").Int()
 
-		terraformVersion = app.Flag("terraform-version", "Terraform version.").Required().Envar("TERRAFORM_VERSION").String()
-		providerSource   = app.Flag("terraform-provider-source", "Terraform provider source.").Required().Envar("TERRAFORM_PROVIDER_SOURCE").String()
-		providerVersion  = app.Flag("terraform-provider-version", "Terraform provider version.").Required().Envar("TERRAFORM_PROVIDER_VERSION").String()
+		webhookPort          = app.Flag("webhook-port", "The port the webhook listens on").Default("9443").Envar("WEBHOOK_PORT").Int()
+		metricsBindAddress   = app.Flag("metrics-bind-address", "The address the metrics server listens on").Default(":8080").Envar("METRICS_BIND_ADDRESS").String()
+		changelogsSocketPath = app.Flag("changelogs-socket-path", "Path for changelogs socket (if enabled)").Default("/var/run/changelogs/changelogs.sock").Envar("CHANGELOGS_SOCKET_PATH").String()
 
 		enableManagementPolicies = app.Flag("enable-management-policies", "Enable support for Management Policies.").Default("true").Envar("ENABLE_MANAGEMENT_POLICIES").Bool()
+		enableChangeLogs         = app.Flag("enable-changelogs", "Enable support for capturing change logs during reconciliation.").Default("false").Envar("ENABLE_CHANGE_LOGS").Bool()
 
 		certsDirSet = false
 		// we record whether the command-line option "--certs-dir" was supplied
@@ -69,6 +81,8 @@ func main() {
 	)
 
 	kingpin.MustParse(app.Parse(os.Args[1:]))
+	log.Default().SetOutput(io.Discard)
+	ctrl.SetLogger(zap.New(zap.WriteTo(io.Discard)))
 
 	zl := zap.New(zap.UseDevMode(*debug))
 	log := logging.NewLogrLogger(zl.WithName("provider-opensearch"))
@@ -77,9 +91,30 @@ func main() {
 		// *very* verbose even at info level, so we only provide it a real
 		// logger when we're running in debug mode.
 		ctrl.SetLogger(zl)
+
+		pprofRouter := http.NewServeMux()
+
+		pprofRouter.HandleFunc("/debug/pprof/", pprof.Index)
+		pprofRouter.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+		pprofRouter.HandleFunc("/debug/pprof/profile", pprof.Profile)
+		pprofRouter.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+		pprofRouter.HandleFunc("/debug/pprof/trace", pprof.Trace)
+
+		go func() {
+			server := &http.Server{
+				Addr:         ":9090",
+				Handler:      pprofRouter,
+				ReadTimeout:  10 * time.Second,
+				WriteTimeout: 120 * time.Second,
+				IdleTimeout:  15 * time.Second,
+			}
+			_ = server.ListenAndServe()
+		}()
 	}
 
-	log.Debug("Starting", "sync-interval", syncInterval.String(), "poll-interval", pollInterval.String(), "max-reconcile-rate", *maxReconcileRate)
+	pollJitter := time.Duration(float64(*pollInterval) * 0.05)
+	log.Debug("Starting", "sync-period", syncPeriod.String(),
+		"poll-interval", pollInterval.String(), "poll-jitter", pollJitter, "max-reconcile-rate", *maxReconcileRate)
 
 	cfg, err := ctrl.GetConfig()
 	kingpin.FatalIfError(err, "Cannot get API server rest config")
@@ -110,8 +145,17 @@ func main() {
 		LeaderElection:   *leaderElection,
 		LeaderElectionID: "crossplane-leader-election-provider-opensearch",
 		Cache: cache.Options{
-			SyncPeriod: syncInterval,
+			SyncPeriod: syncPeriod,
 		},
+		Metrics: metricsserver.Options{
+			BindAddress: *metricsBindAddress,
+		},
+		WebhookServer: webhook.NewServer(
+			webhook.Options{
+				CertDir: *certsDir,
+				Port:    *webhookPort,
+			},
+		),
 		LeaderElectionResourceLock: resourcelock.LeasesResourceLock,
 		LeaseDuration:              func() *time.Duration { d := 60 * time.Second; return &d }(),
 		RenewDeadline:              func() *time.Duration { d := 50 * time.Second; return &d }(),
@@ -123,6 +167,7 @@ func main() {
 	kingpin.FatalIfError(authv1.AddToScheme(mgr.GetScheme()), "Cannot add k8s authorization APIs to scheme")
 
 	provider, err := config.GetProvider(false)
+	kingpin.FatalIfError(err, "Cannot initialize the provider configuration")
 	clusterOpts := tjcontroller.Options{
 		Options: xpcontroller.Options{
 			Logger:                  log,
@@ -134,12 +179,16 @@ func main() {
 		Provider: provider,
 		// use the following WorkspaceStoreOption to enable the shared gRPC mode
 		// terraform.WithProviderRunner(terraform.NewSharedProvider(log, os.Getenv("TERRAFORM_NATIVE_PROVIDER_PATH"), terraform.WithNativeProviderArgs("-debuggable")))
-		WorkspaceStore: terraform.NewWorkspaceStore(log),
-		SetupFn:        clients.TerraformSetupBuilder(*terraformVersion, *providerSource, *providerVersion),
-		StartWebhooks:  *certsDir != "",
+		WorkspaceStore:        terraform.NewWorkspaceStore(log),
+		SetupFn:               clients.TerraformSetupBuilder(provider.TerraformProvider),
+		PollJitter:            pollJitter,
+		OperationTrackerStore: tjcontroller.NewOperationStore(log),
+		StartWebhooks:         *certsDir != "",
 	}
 
 	providerNamespaced, err := config.GetProviderNamespaced(false)
+	kingpin.FatalIfError(err, "Cannot initialize the namespaced provider configuration")
+
 	namespacedOpts := tjcontroller.Options{
 		Options: xpcontroller.Options{
 			Logger:                  log,
@@ -151,15 +200,34 @@ func main() {
 		Provider: providerNamespaced,
 		// use the following WorkspaceStoreOption to enable the shared gRPC mode
 		// terraform.WithProviderRunner(terraform.NewSharedProvider(log, os.Getenv("TERRAFORM_NATIVE_PROVIDER_PATH"), terraform.WithNativeProviderArgs("-debuggable")))
-		WorkspaceStore: terraform.NewWorkspaceStore(log),
-		SetupFn:        clients.TerraformSetupBuilder(*terraformVersion, *providerSource, *providerVersion),
-		StartWebhooks:  *certsDir != "",
+		WorkspaceStore:        terraform.NewWorkspaceStore(log),
+		SetupFn:               clients.TerraformSetupBuilder(provider.TerraformProvider),
+		PollJitter:            pollJitter,
+		OperationTrackerStore: tjcontroller.NewOperationStore(log),
+		StartWebhooks:         *certsDir != "",
 	}
 
 	if *enableManagementPolicies {
 		clusterOpts.Features.Enable(features.EnableBetaManagementPolicies)
 		namespacedOpts.Features.Enable(features.EnableBetaManagementPolicies)
 		log.Info("Beta feature enabled", "flag", features.EnableBetaManagementPolicies)
+	}
+
+	if *enableChangeLogs {
+		clusterOpts.Features.Enable(feature.EnableAlphaChangeLogs)
+		namespacedOpts.Features.Enable(feature.EnableAlphaChangeLogs)
+		log.Info("Alpha feature enabled", "flag", feature.EnableAlphaChangeLogs)
+
+		conn, err := grpc.NewClient("unix://"+*changelogsSocketPath, grpc.WithTransportCredentials(insecure.NewCredentials()))
+		kingpin.FatalIfError(err, "failed to create change logs client connection at %s", *changelogsSocketPath)
+
+		clo := xpcontroller.ChangeLogOptions{
+			ChangeLogger: managed.NewGRPCChangeLogger(
+				changelogsv1alpha1.NewChangeLogServiceClient(conn),
+				managed.WithProviderVersion(fmt.Sprintf("provider-opensearch:%s", version.Version))),
+		}
+		clusterOpts.ChangeLogOptions = &clo
+		namespacedOpts.ChangeLogOptions = &clo
 	}
 
 	canSafeStart, err := canWatchCRD(context.TODO(), mgr)
