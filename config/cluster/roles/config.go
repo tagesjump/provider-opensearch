@@ -24,5 +24,4 @@ func Configure(p *config.Provider) {
 			Type: fmt.Sprintf("%s.%s", opensearch.ApisPackagePath, "User"),
 		}
 	})
-
 }

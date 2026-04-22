@@ -12,4 +12,12 @@ const (
 )
 
 // Configure adds configurations for the opensearch group.
-func Configure(p *config.Provider) {}
+func Configure(p *config.Provider) {
+	p.AddResourceConfigurator("opensearch_role", func(r *config.Resource) {
+		r.UseAsync = false
+	})
+
+	p.AddResourceConfigurator("opensearch_user", func(r *config.Resource) {
+		r.UseAsync = false
+	})
+}

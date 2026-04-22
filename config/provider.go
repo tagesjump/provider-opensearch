@@ -15,7 +15,9 @@ import (
 	conversiontfjson "github.com/crossplane/upjet/v2/pkg/types/conversion/tfjson"
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
+	opensearchClustered "github.com/tagesjump/provider-opensearch/config/cluster/opensearch"
 	rolesClustered "github.com/tagesjump/provider-opensearch/config/cluster/roles"
+	opensearchNamespaced "github.com/tagesjump/provider-opensearch/config/namespaced/opensearch"
 	namespacedClustered "github.com/tagesjump/provider-opensearch/config/namespaced/roles"
 )
 
@@ -72,11 +74,13 @@ func GetProvider(generationProvider bool) (*ujconfig.Provider, error) {
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithDefaultResourceOptions(
 			ExternalNameConfigurations(),
+			DisableAsync(),
 		),
 		ujconfig.WithReferenceInjectors([]ujconfig.ReferenceInjector{reference.NewInjector(modulePath)}),
 	)
 
 	for _, configure := range []func(provider *ujconfig.Provider){
+		opensearchClustered.Configure,
 		rolesClustered.Configure,
 	} {
 		configure(pc)
@@ -107,9 +111,11 @@ func GetProviderNamespaced(generationProvider bool) (*ujconfig.Provider, error) 
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithDefaultResourceOptions(
 			ExternalNameConfigurations(),
+			DisableAsync(),
 		))
 
 	for _, configure := range []func(provider *ujconfig.Provider){
+		opensearchNamespaced.Configure,
 		namespacedClustered.Configure,
 	} {
 		configure(pc)
@@ -128,4 +134,10 @@ func resourceList(t map[string]ujconfig.ExternalName) []string {
 		i++
 	}
 	return l
+}
+
+func DisableAsync() ujconfig.ResourceOption {
+	return func(r *ujconfig.Resource) {
+		r.UseAsync = false
+	}
 }
